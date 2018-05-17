@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>获取某一个容器中的元素子节点</title>
+</head>
+<body>
+<div id="div1">
+    <div></div>
+    <div></div>
+    <div>
+        <p></p>
+        <p></p>
+    </div>
+    <p></p>
+    <p></p>
+    <p></p>
+</div>
+<script>
+    var oDiv = document.getElementById('div1');
+
+    /**
+     * 首先获取所有的子节点(childNodes),在所有的子节点中，把元素节点过滤出来(nodeType == 1)
+     * @param curEle
+     */
+    function children(curEle, tagName) {
+        var ary = [];
+        //IE6~8不能使用内置的children属性
+        if (/MSIE (6|7|8)/i.test(navigator.userAgent)) {
+            var nodeList = curEle.childNodes;
+            for (var i = 0, len = nodeList.length; i < len; i++) {
+                var curNode = nodeList[i];
+                if (curNode.nodeType === 1) {
+                    ary[ary.length] = curNode;
+                }
+            }
+        } else {
+            //标准下可以直接使用children,但是需要把类数组转为数组
+            ary = Array.prototype.slice.call(curEle.children);
+        }
+
+        //二次筛选，选出给定的标签
+        if (typeof tagName === "string") {
+            for (var k = 0; k < ary.length; k++) {
+                var curEleNode = ary[k];
+                if (curEleNode.nodeName.toLowerCase() !== tagName.toLowerCase()) {
+                    ary.splice(k, 1);
+                    k--;//防止数组塌陷->因为删除了当前下标位置 后面的下标会回退一位 造成数组塌陷 所以需要自减一位 再进行j++就不会跳过去了
+                }
+            }
+        }
+
+        return ary;
+    }
+
+    console.log(children(oDiv).length);
+
+</script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    //传统
+    //cookie、session
+
+    //HTML5
+    //localStorage:永久存储到客户端的本地
+    //sessionStorage:信息的会话存储，会话窗口存在，信息也存在，会话窗口关闭信息就消失
+
+    //setItem(key,value);向客户端的本地存储一条记录，存储的value只能是字符串格式的，如果写的不是字符串，浏览器默认转化为字符串
+    localStorage.setItem('age', 7);
+    localStorage.getItem('age');
+    localStorage.removeItem('age');
+    localStorage.clear();
+    localStorage.length;
+    localStorage.key(0);//索引为0的 key 的值
+
+    //cookie
+    //cookie兼容所有，localStorage不兼容IE6~8
+    //cookie存储内容的大小是有限制的，一般同源下只能存储4KB的内容
+    //localStorage存储的内容一般同源下只能存储5MB,在PC端我们可以用其存储某一个JS或者CSS中的源代码，还可以吧一些不需要经常更新的数据存储到本地，存储的时候，可以设置一个存储的时间，以后重新刷新页面，看一下时间有没有超过预定的时间，若果超过了，从新
+</script>
+</body>
+</html>

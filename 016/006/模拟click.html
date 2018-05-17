@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
+    <link rel="stylesheet" href="../reset.css">
+    <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+            background: #eee;
+            overflow-x: hidden;
+        }
+
+        .box {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            margin: auto;
+
+            width: 100px;
+            height: 100px;
+            background: lightblue;
+
+            -webkit-transition: all 1s linear 0s;
+            transition: all 1s linear 0s;
+        }
+    </style>
+</head>
+<body>
+
+<div class="box"></div>
+
+<script>
+    var oBox = document.querySelector('.box');
+
+    function on(curEle, type, fn) {
+        curEle.addEventListener(type, fn, false);
+    }
+
+    on(oBox, 'touchstart', function (ev) {
+        //ev:changedTouches和touches都是手指信息的集合（TouchList），touches获取到值的必备条件只有手指还在屏幕上才可以获取，所以在touchend事件中，如果想要获取手指离开的瞬间坐标，只能使用changedTouches获取
+        var point = ev.touches[0];
+        this['strX'] = point.clientX;
+        this['strY'] = point.clientY;
+        this['isMove'] = false;
+
+    });
+    on(oBox, 'touchmove', function (ev) {
+        var point = ev.touches[0];
+        var newX = point.clientX, newY = point.clientY;
+        //判断是否发生滑动，我们需要判断便宜的值是否在30px之内
+        if (Math.abs(newX - this['strX']) > 30 || Math.abs(newY - this['strY']) > 30) {
+            this['isMove'] = true;
+        }
+    });
+    on(oBox, 'touchend', function (ev) {
+        if (this['isMove'] === false) {
+            //没有发生移动，就是点击
+            this.style.webkitTransitionDuration = '1s';
+            this.style.webkitTransform = 'rotate(360deg)';
+            var delayTimer = window.setTimeout(function () {
+                this.style.webkitTransitionDuration = '0s';
+                this.style.webkitTransform = 'rotate(0)';
+                window.clearTimeout(delayTimer);
+            }.bind(this), 1000)
+        } else {
+            //滑动
+            this.style.background = 'red';
+        }
+    })
+
+    //有300ms延迟
+    /*oBox.addEventListener('click', function () {
+        this.style.webkitTransform = 'rotate(360deg)';
+    })*/
+
+</script>
+</body>
+</html>

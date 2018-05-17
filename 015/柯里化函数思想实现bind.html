@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .box:valid{
+            background: #abcdef;
+        }
+        .box:invalid{
+            background: red;
+        }
+    </style>
+</head>
+<body>
+<input type="email" name="" class="box">
+
+<script>
+    //柯里化思想：一个JS预处理的思想->利用了函数执行可以形成一个不销毁的私有的作用域，把需要预先处理的内容都存储在这个不销毁的作用域中，并且返回一个小函数，以后我们执行的都是小函数，在小函数中把之前预先存储的值进行相关的操作处理即可
+
+
+    //bind  ie6~8不兼容
+
+    /**
+     * 把callback这个函数总的this预先处理为context
+     * @param callback
+     * @param context
+     */
+    function bind(callback, context) {
+        context = context || window;
+        return function () {
+            callback.call(context);
+        }
+    }
+
+</script>
+</body>
+</html>

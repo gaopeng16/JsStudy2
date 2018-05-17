@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="public.css">
+</head>
+<body>
+<ul class="box2" id="box2">
+    <!--<li>
+        <span>编号：</span>
+        <span>4</span>
+    </li>
+    <li>
+        <span>姓名：</span>
+        <span>哈哈</span>
+    </li>
+    <li>
+        <span>性别：</span>
+        <span>女</span>
+    </li>
+    <li>
+        <span>分数：</span>
+        <span>98</span>
+    </li>-->
+</ul>
+<script src="ajax.js"></script>
+<script>
+    String.prototype.queryURLParameter = function () {
+        var obj = {},
+            reg = /([^?=&#]+)=([^?=&#]+)/g;
+        this.replace(reg, function () {
+            var key = arguments[1],
+                value = arguments[2];
+            obj[key] = value;
+        });
+        return obj;
+    };
+
+    var detailModule = (function () {
+        var box2 = document.getElementById("box2");
+        var urlObj = window.location.href.queryURLParameter();
+        var data = null;
+
+        function bindHTML(data) {
+
+            var str = '';
+
+            for (var key in data) {
+                if (obj.hasOwnProperty(key)) {
+
+                    str += '<li>';
+                    str += '<span>' + key + '：</span>';
+                    str += '<span>' + data[key] + '</span>';
+                    str += '</li>';
+                }
+            }
+            /*str += '<li>';
+            str += '<span>编号：</span>';
+            str += '<span>' + data["id"] + '</span>';
+            str += '</li>';
+            str += '<li>';
+            str += '<span>姓名：</span>';
+            str += '<span>' + data["name"] + '</span>';
+            str += '</li>';
+            str += '<li>';
+            str += '<span>性别：</span>';
+            str += '<span>' + (data["sex"] === 0 ? "男" : "女") + '</span>';
+            str += '</li>';
+            str += '<li>';
+            str += '<span>分数：</span>';
+            str += '<span>' + data["score"] + '</span>';
+            str += '</li>';*/
+            box2.innerHTML = str;
+        }
+
+        function init() {
+            ajax({
+                url: "/getInfo?id=" + urlObj.id,
+                success: function (data) {
+                    if (data && data.code == 0) {
+                        data = data["data"];
+                        bindHTML(data);
+                    }
+                }
+            })
+        }
+
+        return {init: init}
+    })();
+    detailModule.init();
+</script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    /**
+     * exec->正则的捕获
+     * 每一次捕获的时候，都是先进行默认的匹配，如果没有匹配成功的，捕获的结果是null;
+     *
+     * 1)捕获到的内容是一个数组，数组中的第一项是当前大正则捕获的内容
+     *  index：捕获内容在字符串中的索引位置
+     *  input:捕获的原始字符串
+     *
+     *  2.正则捕获的特点
+     *  1)懒惰型：每一次执行exec只捕获第一个匹配的内容，在不进行任何处理的情况下，再执行多次捕获，捕获的还是第一个匹配的内容
+     *
+     *  属性lastIndex:是正则每一次捕获在字符串中开始查找的位置，默认值是0
+     *
+     */
+    var reg = /\d+/g;//加了全局修饰符g，正则每一次捕获后，lastIndex的值都变成了最新的值
+    var str = "zhangsan2015lisi2016";
+    //var res = reg.exec(str);
+    //console.log(res);//["2015", index: 8, input: "zhangsan2015lisi2016"]
+    //var res = reg.exec(str);
+    //console.log(res)
+    var ary = [];
+    var res = reg.exec(str);
+    while (res) {
+        ary.push(res[0]);
+        res = reg.exec(str);
+    }
+    console.log(ary);
+
+    //如何解决懒惰性
+    //在正则的末尾加一个修饰符“g”
+    //修饰符： g(全局匹配)、i(区分大小写)、m(多行匹配)
+
+    /**
+     * 为什么每次都是捕获2015，而不是先捕获2，再捕获0...
+     * 这就是贪婪性
+     * 如何解决：只需要在量词元字符后添加一个'?'即可
+     * '?'在正则中有很多作用：
+     * a.放在一个普通的元字符后面代表出现0-1次 /\d?/
+     * b.放在一个量词的元字符后面是取消贪婪模式 /\d+?/
+     * c.(?:) 在分组中?:的意思是只匹配不捕获
+     */
+    var reg1 = /\d+?/g;
+    var ary1 = [];
+    var res1 = reg1.exec(str);
+    while (res1) {
+        ary1.push(res1[0]);
+        res1 = reg1.exec(str);
+    }
+    console.log(ary1);
+
+    /**
+     * 正则的捕获的第二种方式str.match(reg):把所有和正则匹配的字符都获取到
+     */
+    var reg2 = /\d+?/g;
+    var ary2 = str.match(reg2);
+    console.log(ary2);
+
+    /**
+     * 虽然match比exec更加的简便一些，但是match中存在一些自己处理不了的问题：
+     * 在分组捕获的情况下，match只能捕获到大正则匹配的内容，而对于小正则捕获的内容是无法获取的
+     */
+
+
+</script>
+</body>
+</html>

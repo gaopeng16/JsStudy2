@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
+    <link rel="stylesheet" href="reset.css">
+    <style>
+        html {
+            font-size: 100px;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            font-size: .14rem;
+            color: #000;
+            overflow: hidden;
+        }
+
+        h1 {
+            font-size: .18rem;
+        }
+
+        .header {
+            height: .5rem;
+            line-height: .5rem;
+            background: -webkit-linear-gradient(top left, #85bae4, #B1D410, #E0F2Be);
+        }
+
+        .header span {
+            float: left;
+            width: 25%;
+            text-align: center;
+        }
+
+        .content {
+            position: relative;
+            overflow: hidden;
+            /*overflow-y: auto;*/
+        }
+
+        .content li {
+            height: .4rem;
+            line-height: .4rem;
+        }
+
+        .content li:nth-child(even) {
+            background: #ccc;
+        }
+
+        .content li span {
+            float: left;
+            width: 25%;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <h1>
+        <span>编号</span>
+        <span>姓名</span>
+        <span>性别</span>
+        <span>分数</span>
+    </h1>
+</header>
+
+<section class="content">
+    <ul>
+        <!--<li>
+            <span>01</span>
+            <span>张三</span>
+            <span>男</span>
+            <span>96</span>
+        </li>-->
+    </ul>
+</section>
+
+<!--
+    在移动端开发中，使用position:fixed，很多的手机都支持不好，尤其是在定位的区域还需要输入内容调取虚拟键盘的时候会出现很多的问题
+-->
+
+<script src="js/ejs.min.js"></script>
+<script type="text/template" id="conTemplate">
+    <% $.each(data,function(index,item){%>
+    <li>
+        <span><%=item.id%></span>
+        <span><%=item.name%></span>
+        <span><%=item.sex == 1 ? '女' : '男'%></span>
+        <span><%=item.score%></span>
+    </li>
+    <%})%>
+</script>
+
+<script src="js/zepto.min.js"></script>
+<script src="js/iscroll.js"></script>
+<script>
+    //->REM
+    document.documentElement.style.fontSize = document.documentElement.clientWidth / 320 * 100 + "px";
+
+    ~function () {
+        var $content = $(".content");
+        //->计算content区域的高度
+        $content.css('height', document.documentElement.clientHeight - $('header')[0].offsetHeight);
+
+        function callBack(data) {
+            //字符串拼接的方法:开发效率低，JS代码结构乱...
+            /*var str = '';
+            $.each(data, function (index, item) {
+                str += '<li>';
+                str += '<span>' + item.id + '</span>';
+                str += '<span>' + item.name + '</span>';
+                str += '<span>' + (item.sex == 1 ? '女' : '男') + '</span>';
+                str += '<span>' +  + '</span>';
+                str += '</li>';
+            });
+            $('.content>ul').html(str);*/
+
+            //使用模板引擎渲染页面中的数据：EJS
+            var template = $("#conTemplate").html();
+            $content.children("ul").html(ejs.render(template, {
+                data: data
+            }));
+
+            //->在数据绑定完成后实现局部滚动
+            /**
+             * var 实例=new IScroll(select,{})
+             * 初始化成功后，只对当前容器中的第一个子元素实现了滚动操作 document.querySelectort('.content').querySelector('*')
+             *
+             * scrollbars:true 显示滚动条，默认是不显示的(开启后，iscroll会默认的想content区域增加一个iScrollVerticalScrollbarDIV,这个DIV控制器的是滚动条，他的样式是position:absolute;所以如果只想让滚动条在容器中，需要给当前的滚动条增加position:relative)
+             * mouseWheel:true 支持鼠标滚轮滚动
+             * bounce:false 禁止滚动边界后反弹
+             * fadeScrollbars:true 滚动的时候才显示滚动条
+             * click:true 防止滑动时误操作，默认是禁止的，如果需要点击开启即可
+             * @type {IScroll|*}
+             *
+             * [方法]
+             * myScroll.refresh():当滚动区域的内容发生改变的时候，我们让当前的实例刷新一下，这样的话滚动区域的相关值都会跟着重新计算
+             * myScroll.scrollToElement([ele],[time]):用多长的实间滚动到具体的某一个元素位置
+             */
+            var myScroll = new IScroll('.content', {
+                scrollbars: true,
+                mouseWheel: true,
+                bounce: false,
+                fadeScrollbars: true,
+                click: true
+            });
+            // myScroll.refresh();
+            var $li = $content.find('li');
+            myScroll.scrollToElement($li[$li.lenght - 1], 300);
+        }
+
+        $.ajax({
+            url: "data.json",
+            type: 'get',
+            dataType: 'json',
+            cache: false,
+            success: callBack
+        })
+    }()
+</script>
+</body>
+</html>

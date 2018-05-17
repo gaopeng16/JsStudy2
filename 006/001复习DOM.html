@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="div">
+    <span></span><span></span><span></span>
+    <p id="p"><span></span><span></span></p>
+</div>
+
+<div id="box">
+    <ul id="ul">
+        <li>第一个</li>
+        <li id="one">第二个</li>
+        <li>第三个</li>
+    </ul>
+    <p>我是第二个子节点</p>
+</div>
+
+<script>
+    /**
+     * document.getElementById()
+     * context.getElementsByTagName()->把指定容器中子子孙孙的所有标签都获取到
+     * context.getElementsByClassName()->在IE6~8不兼容
+     * document.getElementByName()->在IE中只对表单元素的name起作用
+     * document.body
+     * document.documentElement
+     * context.querySelector/context.querySelectorAll->在IE6~8不兼容，通过这个获取到的节点集合，不存在DOM映射
+     *
+     *
+     * ==描述节点和节点之间关系的属性
+     * childNodes (在标准的浏览器中会把空格和换行当做文本节点处理)
+     * children 获取所有的元素节点，在IE6~8下获取的结果和标准下的结果不一致
+     * parentNode
+     * previousSibling/previousElementSibling
+     * nextSibling/nextElementSibling
+     * lastChild/lastElementChild
+     * firstChild/firstElementChild
+     *
+     * ==DOM的增删改
+     * createElement
+     * document.createDocumentFragment()
+     * appendChild
+     * insertBefore
+     * cloneNode(true/false)
+     * replaceChild
+     * removeChild
+     * get/set/removeAttribute
+     *
+     * ==DOM盒子模型
+     */
+    var oDiv = document.getElementById('div');
+    var oP = document.getElementById('p');
+    //console.log(oDiv.children[3]);
+    //console.log(oDiv.childNodes[5]);
+    //console.log(oP.parentNode);
+
+    var one = document.getElementById("one");
+    //console.log(one.nextSibling);
+    //console.log(one.nextElementSibling);
+
+    //function children(){}获取某一个容器中所有的元素子节点(还可以筛选出指定标签名的)
+    //getElementsByClass() ->通过样式类名获取一组元素(兼容所有的浏览器)(jQuery中没有这个方法名，但是jQuery的一部分选择器也是基于这个的原理来的)
+    //prev():获取上一个哥哥元素几点
+    //next():..下一个..
+    //prevAll():
+    //nextAll():
+    //sibling():获取相邻两个元素节点
+    //siblings():所有的兄弟节点
+    //firstChild():获取第一个元素子节点(jQuery中没有这个方法)
+    //lastChild():获取第一个元素子节点(jQuery中没有这个方法)
+    //index():获取当前元素的索引
+
+    //prepend ->和appendChild对应，增加到某一个容器开头
+    //insetAfter ->和insertBefore对应 增加到容器中某一个元素后面
+
+    //addClass
+    //removeClass
+    //hasClass
+
+    /**
+     * jQuery->css();
+     * getCss()
+     * setCss()
+     * setGroupCss()
+     */
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,142 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+input {
+    outline: none;
+}
+
+ul, li {
+    list-style: none;
+}
+
+html, body {
+    width: 100%;
+    overflow-x: hidden;
+    color: #000;
+    font-size: 14px;
+    font-family: "Microsoft YaHei UI";
+    -webkit-user-select: none;
+}
+
+/*-- index start --*/
+.box {
+    margin: 20px auto;
+    padding: 20px;
+    width: 800px;
+    border: solid 2px green;
+    text-align: center;
+}
+
+.box h2 {
+    height: 35px;
+    line-height: 35px;
+    color: #ffffff;
+    font-size: 16px;
+    background: green;
+}
+
+.box h2 span, .con li span {
+    float: left;
+    width: 200px;
+    height: 100%;
+    text-align: center;
+}
+
+.con {
+    height: 300px;
+}
+
+.con li {
+    height: 30px;
+    line-height: 30px;
+    cursor: pointer;
+}
+
+.con li:nth-child(even) {
+    background: #eeeeee;
+}
+
+.con li:hover {
+    background: #E0F2BE;
+}
+
+.page {
+    display: inline-block;
+    margin-top: 10px;
+    height: 22px;
+    line-height: 22px;
+}
+
+.page span, .page ul, .page input, .page li {
+    float: left;
+    margin: 0 3px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    font-size: 12px;
+    border: solid 1px green;
+    cursor: pointer;
+}
+
+.page ul {
+    border: none;
+}
+
+.page span {
+    width: 45px;
+}
+
+.page li {
+    width: 20px;
+}
+
+.page input {
+    width: 45px;
+}
+
+.page li.bg {
+    background: green;
+    color: #ffffff;
+}
+
+/*-- detail --*/
+.box2 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -100px;
+    margin-left: -100px;
+    height: 200px;
+    width: 200px;
+    border: dashed 2px green;
+}
+
+.box2 li {
+    height: 50px;
+    line-height: 50px;
+}
+
+.box2 li:nth-child(even) {
+    background: #eeeeee;
+}
+
+.box2 li span {
+    float: left;
+}
+
+.box2 li span:nth-child(1) {
+    width: 50px;
+    text-align: center;
+}
+
+.box2 li span:nth-child(2) {
+    width: 150px;
+}
+
+
+
+
+
+

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        #box1 {
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            background: red;
+        }
+
+        #box2 {
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            background: blue;
+            left: 200px;
+            top: 100px;
+        }
+
+        #box3 {
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            background: green;
+            left: 100px;
+            top: 200px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="box1">
+    <img src="../007/img/icon.png" width="100" height="100" alt="">
+</div>
+<div id="box2"></div>
+<div id="box3"></div>
+<script src="../event.js"></script>
+<script>
+
+    function processThis(obj, fn) {
+        return function (e) {
+            fn.call(obj, e);
+        }
+    }
+
+    var zIndex = 1;
+    //module model（模块模式）
+    //a-变量需要保护，b-里面的一些函数或属性还要复用，c-变量共享
+    var DRAG = (function () {
+        var x = null, y = null, mx = null, my = null;
+        var MOVE = null, UP = null;
+
+        function down(e) {
+            x = this.offsetLeft;
+            y = this.offsetTop;
+            mx = e.pageX;
+            my = e.pageY;
+            if (this.setCapture) {
+                this.setCapture();
+                gpEvent.on(this, "mousemove", move);
+                gpEvent.on(this, "mouseup", up);
+            } else {
+                MOVE = processThis(this, move);
+                UP = processThis(this, up);
+                gpEvent.on(document, "mousemove", MOVE);
+                gpEvent.on(document, "mouseup", UP);
+            }
+            e.preventDefault();
+            this.style.zIndex = ++zIndex;
+
+            window.clearInterval(this.flyTimer);
+            window.clearInterval(this.dropTimer);
+        }
+
+        function move(e) {
+            this.style.left = x + (e.pageX - mx) + "px";
+            this.style.top = y + (e.pageY - my) + "px";
+
+            if (!this.pre) {
+                this.pre = this.offsetLeft;
+            } else {
+                this.speedX = this.offsetLeft - this.pre;
+                this.pre = this.offsetLeft;
+            }
+        }
+
+        function up() {
+            if (this.releaseCapture) {
+                this.releaseCapture();
+                gpEvent.off(this, "mousemove", move);
+                gpEvent.off(this, "mouseup", up);
+            } else {
+                gpEvent.off(document, "mousemove", MOVE);
+                gpEvent.off(document, "mouseup", UP);
+            }
+        }
+
+        return {down: down, move: move, up: up}
+    })();
+
+    var eles = document.getElementsByTagName("div");
+    for (var i = 0; i < eles.length; i++) {
+        gpEvent.on(eles[i], "mousedown", DRAG.down);
+    }
+
+</script>
+</body>
+</html>

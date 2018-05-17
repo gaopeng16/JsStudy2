@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        #div {
+            width: 100px;
+            height: 100px;
+            background: rebeccapurple;
+            position: absolute;
+            left: 0;
+            top: 50px;
+            -webkit-border-radius: 50%;
+            -moz-border-radius: 50%;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        window.onload = function () {
+            var oDiv = document.getElementById('div');
+
+            oDiv.onmousedown = function (e) {
+                var e = e || event;
+                var _this = this;
+                var disX = e.clientX - this.offsetLeft;
+                var disY = e.clientY - this.offsetTop;
+
+                if (this.setCapture) {
+                    this.setCapture();
+                }
+
+                document.onmousemove = function (e) {
+                    var e = e || event;
+
+                    var l = e.clientX - disX;
+                    var t = e.clientY - disY;
+
+                    //如果到达边界松开鼠标，会垂直落下，是如下代码造成，可写可不写
+                    var minL = 0, minT = 0,
+                        maxL = (document.documentElement.clientWidth || document.body.clientWidth) - _this.offsetWidth,
+                        maxT = (document.documentElement.clientHeight || document.body.clientHeight) - _this.offsetHeight;
+
+                    l = l <= minL ? minL : (l >= maxL ? maxL : l);
+                    t = t <= minT ? minT : (t >= maxT ? maxT : t);
+                    //如果到达边界松开鼠标，会垂直落下，是如上代码造成，可写可不写
+
+                    _this.style.left = l + 'px';
+                    _this.style.top = t + 'px';
+
+                    if (!_this.lastX) {
+                        _this.lastX = l;
+                    } else {
+                        _this.iSpeedX = l - _this.lastX;
+                        _this.lastX = l;
+                    }
+
+                    if (!_this.lastY) {
+                        _this.lastY = l;
+                    } else {
+                        _this.iSpeedY = l - _this.lastX;
+                        _this.lastY = l;
+                    }
+
+                };
+
+                document.onmouseup = function () {
+                    document.onmousemove = document.onmouseup = null;
+                    //释放全局捕获
+                    if (_this.releaseCapture) {
+                        _this.releaseCapture();
+                    }
+                    parabolaMove.call(_this);
+                };
+
+                clearInterval(this.timer);//鼠标按下的时候，清除定时器，以免跟 鼠标抬起后调用的parabolaMove()的定时器冲突
+
+                return false;//取消默认行为
+            }
+        };
+
+        function parabolaMove() {
+            var _this = this;
+            this.timer = setInterval(function () {
+
+                _this.iSpeedY += 3;//速度加大，体现重力加速度
+
+                var l = _this.offsetLeft + _this.iSpeedX;
+                var t = _this.offsetTop + _this.iSpeedY;
+
+                var minL = 0, minT = 0,
+                    maxL = (document.documentElement.clientWidth || document.body.clientWidth) - _this.offsetWidth,
+                    maxT = (document.documentElement.clientHeight || document.body.clientHeight) - _this.offsetHeight;
+
+                if (t > maxT) {
+                    _this.iSpeedY *= -0.8;
+                    _this.iSpeedX *= 0.8;
+                    t = maxT;
+                } else if (t < minT) {
+                    _this.iSpeedY *= -0.8;
+                    _this.iSpeedX *= 0.8;
+                    t = minT;
+                }
+
+                if (l > maxL) {
+                    _this.iSpeedX *= -0.8;
+                    l = maxL;
+                } else if (l < minL) {
+                    _this.iSpeedX *= -0.8;
+                    l = minL;
+                }
+
+                if (Math.abs(_this.iSpeedX) < 1) {
+                    _this.iSpeedX = 0;
+                }
+                if (Math.abs(_this.iSpeedY) < 1) {
+                    _this.iSpeedY = 0;
+                }
+
+                if (_this.iSpeedX == 0 && _this.iSpeedY == 0 && t == maxT) {
+                    clearInterval(_this.timer);
+                } else {
+                    _this.style.top = t + 'px';
+                    _this.style.left = l + 'px';
+                }
+
+            }, 30)
+        }
+    </script>
+</head>
+<body>
+
+<div id="div"></div>
+</body>
+</html>

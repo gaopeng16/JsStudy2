@@ -1,0 +1,71 @@
+@color: #000;
+@color-white: #ffffff;
+
+.transformScale(@val:1) {
+  -webkit-transform+_: scale(@val);
+  -moz-transform+_: scale(@val);
+  -ms-transform+_: scale(@val);
+  -o-transform+_: scale(@val);
+  transform+_: scale(@val);
+}
+
+.transition(@property:all,@duration:1s,@timer-function:linear,@delay:0s) {
+  -webkit-transition: @arguments;
+  -moz-transition: @arguments;
+  -ms-transition: @arguments;
+  -o-transition: @arguments;
+  transition: @arguments;
+}
+
+html, body {
+  background: @color-white;
+}
+
+.box {
+  /*这种方式不需要知道具体宽高（不兼容IE的低版本浏览器）*/
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+
+  width: 200px;
+  height: 200px;
+  color: @color-white;
+  border: solid 1px @color;
+  background: #abcdef;
+  .transition(@duration: .3s);
+
+  &:hover {
+    .transformScale(1.5);
+    background: lighten(#007aff, 20%);
+  }
+
+}
+
+
+.public{
+  width: 100px;
+  height: 100px;
+  .inner{
+    background: #000;
+  }
+}
+//征用：把原有的克隆一份拿过来使用
+.item{
+  .public;
+}
+//公用：和原来的选择器公用一套
+.item{
+  &:extend(.public);
+}
+.item:extend(.public){}//与上同
+/*
+编译后：
+.public,.item{
+  width: 100px;
+  height: 100px;
+}
+*/
+

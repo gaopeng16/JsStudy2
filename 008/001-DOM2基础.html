@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="box"></div>
+<script>
+    /**
+     * 1).DOM0给某一个元素的同一个事件只能绑定一次方法
+     *   DOM2给某一个元素的同一个事件能绑定多个“不同”的方法，如果方法相同只能留一个
+     *
+     * 2).DOM0中的行为类型，我们用DOM2一样可以绑定，而且DOM2中还提供了一些DOM0中没有的行为类型->DOMContentLoaded(当页面中的DOM结构<HTML结构加载完成>)触发的行为
+     */
+    var oBox = document.getElementById('box');
+
+    //DOM0：
+    oBox.onclick = function () {
+
+    };
+    //DOM2：
+    // 3).绑定匿名函数没法移出
+    /*oBox.addEventListener("click", function () {
+        console.log(this);//this->box
+    }, false);*/
+
+    function fn1(e) {
+        console.log(this);//this->box
+    }
+
+    oBox.addEventListener("click", fn1, false);
+    //移出的时候需要保证三个参数完成一样->在使用DOM2绑定的时候，一般都给他绑定的是实名函数
+    oBox.removeEventListener("click", fn1, false);
+
+    // 4).
+    //    a.只能给某个元素的同一个行为绑定多个“不同”的方法（如果方法相同只能留一个）
+    //    b.当行为触发，会按照绑定的顺序依次执行
+    //    c.执行的方法中的this是当前被绑定事件的元素本身
+
+    //事件池：是用来存储当前元素行为绑定的方法的（浏览器自带的机制）
+
+    //在IE6~8中不支持addEventListener，如果想实现，只能用attachEvent/detachEvent
+    // 只有两个参数，只能在冒泡阶段发生,行为需要加“on”
+    oBox.attachEvent("onclick", fn1);
+    oBox.detachEvent("onclick", fn1);
+
+    //和标准浏览器的事件池机制对比：
+    //<1>.顺序问题：执行的时候顺序是混乱的，
+    //<2>.重复问题：可以给同一个元素的同一个行为绑定多个相同的方法
+    //<3>.this问题：得到的this是window
+
+
+</script>
+</body>
+</html>

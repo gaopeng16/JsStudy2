@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    /**
+     * e = e || window.event;
+     * e.target:事件源， ie6~8:e.srcElement
+     * e.target = e.target || e.srcElement
+     *
+     *
+     * 事件的传播机制：
+     * 1.捕获节点：从外向内一次查找元素
+     * 2.目标阶段：当前事件源本身的操作
+     * 3.冒泡阶段：从内到外一次触发相关的行为
+     *
+     * 使用DOM 0级事件绑定给元素的某一个行为绑定的额方法，都是在行为出发后的冒泡阶段把方法执行的，但是ie中只能传播到html
+     * document.body.onclick = function(e){
+     *  console.log(e);
+     * }
+     *
+     * 使用DOM 2级事件绑定
+     * 第三个参数是控制在哪个阶段发生：true->在捕获阶段发生 ,false->在冒泡阶段发生
+     * document.body.addEventListener("click",function(e){
+     *  console.log(e);
+     * },false)
+     *
+     *
+     * 事件委托：
+     * 利用事件的冒泡传播机制，触发当前元素的某个行为，它父级所有元素的相关行为都会被触发
+     *
+     */
+
+</script>
+</body>
+</html>

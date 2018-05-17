@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        window.onload = function () {
+
+            /**
+             * 1.
+             * 基于内置类的原型扩展方法，我们需要注意：
+             * 我们自己编写的方法名最好加上特殊前缀，防止把内置的方法覆盖掉
+             */
+            Array.prototype.gpUnique = function gpUnique() {
+                var obj = {};
+                for (var i = 0; i < this.length; i++) {
+                    var cur = this[i];
+                    if (obj[cur] == cur) {
+                        this[i] = this[this.length - 1];
+                        this.length--;
+                        i--;
+                        continue;
+                    }
+                    obj[cur] = cur;
+                }
+                obj = null;
+                return this;
+            };
+
+            /**
+             * 2.批量设置
+             */
+
+
+        }
+    </script>
+</head>
+<body>
+
+</body>
+</html>

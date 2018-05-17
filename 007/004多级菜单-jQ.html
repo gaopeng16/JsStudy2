@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: "Microsoft YaHei UI";
+        }
+
+        ul, li {
+            list-style: none;
+        }
+
+        .box {
+            width: 300px;
+            margin: 10px;
+            padding: 10px;
+            border: dashed 1px #08BECE;
+            background: #FFE0E9;
+            background: -webkit-linear-gradient(top left, #08BECE, #ffe470, #FFE0E9);
+        }
+
+        .box li {
+            position: relative;
+            line-height: 30px;
+        }
+
+        .box em {
+            width: 16px;
+            height: 16px;
+            position: absolute;
+            background: url("img/icon.png") no-repeat -59px -28px;
+            top: 7px;
+            left: 0;
+            cursor: pointer;
+        }
+
+        .box em.open {
+            background-position: -42px -28px;
+        }
+
+        .box li span {
+            display: block;
+            padding-left: 20px;
+        }
+
+        .box .two, .box .three, .box .four {
+            margin-left: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="box" id="box">
+    <ul>
+        <li>
+            <em></em><span>第一级第一个</span>
+            <ul class="two">
+                <li><span>第二级第一个</span></li>
+                <li>
+                    <em></em><span>第二级第二个</span>
+                    <ul class="three">
+                        <li><span>第三级第一个</span></li>
+                        <li><span>第三级第二个</span></li>
+                        <li>
+                            <em></em><span>第三级第三个</span>
+                            <ul class="four">
+                                <li><span>第四级第一个</span></li>
+                                <li><span>第四级第二个</span></li>
+                                <li><span>第四级第三个</span></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <em></em><span>第二级第三个</span>
+                    <ul class="three">
+                        <li><span>第三级第一个</span></li>
+                        <li><span>第三级第二个</span></li>
+                        <li><span>第三级第三个</span></li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <em></em><span>第一级第二个</span>
+            <ul class="two">
+                <li><span>第二级第一个</span></li>
+                <li>
+                    <em></em><span>第二级第二个</span>
+                    <ul class="three">
+                        <li><span>第三级第一个</span></li>
+                        <li><span>第三级第二个</span></li>
+                        <li>
+                            <em></em><span>第三级第三个</span>
+                            <ul class="four">
+                                <li><span>第四级第一个</span></li>
+                                <li><span>第四级第二个</span></li>
+                                <li><span>第四级第三个</span></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <em></em><span>第二级第三个</span>
+                    <ul class="three">
+                        <li><span>第三级第一个</span></li>
+                        <li><span>第三级第二个</span></li>
+                        <li><span>第三级第三个</span></li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</div>
+<script src="../jquery-1.11.3.js"></script>
+<script>
+    $(function () {
+        var $oBox = $(".box");
+        var $aSpan = $oBox.find("span");
+
+        $aSpan.each(function () {
+            var $pre = $(this).prev();
+            if ($pre[0] && $pre[0].tagName.toLowerCase() === "em") {
+                $(this).css({"cursor": "pointer"});
+            }
+        });
+
+        function fn() {
+            // console.log(this);
+            var $par = $(this).parent();
+            var $ul = $($par.children("ul")[0]);
+            var $em = $($par.children("em")[0]);
+            if ($ul.length > 0) {
+
+                var isBlock = $ul.css("display") === "block" ? true : false;
+                if (isBlock) {
+                    $ul.slideUp();
+                    $em.removeClass("open");
+                    $par.find("ul").css("display", "none");
+                    $par.find("em").removeClass("open");
+                } else {
+                    $ul.slideDown();
+                    $em.addClass("open");
+                }
+            }
+        }
+
+        //给$oBox绑定点击事件，如果当前的事件源是em的话，我们执行fn
+        $oBox.delegate("em", "click", fn);
+        $oBox.delegate("span", "click", fn);
+
+    })
+
+
+</script>
+</body>
+</html>

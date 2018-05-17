@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: "Microsoft YaHei UI";
+            font-size: 14px;
+        }
+
+        input {
+            display: block;
+            outline: none;
+            padding: 0 10px;
+            border: solid 1px #008000;
+        }
+
+        a {
+            display: block;
+            text-decoration: none;
+            color: #000;
+        }
+
+        ul, li {
+            list-style: none;
+        }
+
+        .box {
+            width: 200px;
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            margin-left: -100px;
+        }
+
+        .box ul {
+            border: solid 1px #008000;
+            position: relative;
+            top: -1px;
+            width: 200px;
+        }
+
+        .box ul li a:hover {
+            background: #cccccc;
+        }
+    </style>
+</head>
+<body>
+<div class="box">
+    <input type="text" id="searchInp">
+    <ul id="searchList">
+        <li><a href="javascript:;">中国人</a></li>
+        <li><a href="javascript:;">中国人民</a></li>
+        <li><a href="javascript:;">中国人民警察</a></li>
+        <li><a href="javascript:;">中国人民检察院</a></li>
+        <li><a href="javascript:;">中国人的风俗</a></li>
+    </ul>
+</div>
+<script>
+    window.onload = function () {
+        var searchInp = document.getElementById("searchInp");
+        var searchList = document.getElementById('searchList');
+        var e = null;
+        searchInp.onfocus = searchInp.onkeyup = function () {
+            var val = this.value.replace(/(^ +| +$)/g, "");
+            searchList.style.display = val.length > 0 ? "block" : "none";
+        };
+
+        document.body.onclick = function (ev) {
+            e = ev || window.event;
+            var tar = e.target || e.srcElement;
+            if (tar.tagName.toLowerCase() === "a" && e.target.parentNode.parentNode.id === "searchList") {
+                searchList.style.display = "none";
+                searchInp.value = tar.innerHTML;
+                return;
+            }
+        };
+
+        //如果事件源是文本框还需要单独处理
+        /*if (e.target.id === "searchInp") {
+            return;
+        }*/
+        searchInp.onclick = function (ev) {
+            e = ev || window.event;
+            e.stopPropagation ? e.stopPropagation() : e.cancelBubble = true;
+        }
+
+    }
+</script>
+</body>
+</html>

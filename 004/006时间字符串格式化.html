@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!--<script src="../../js/gp.prototype.js"></script>-->
+</head>
+<body>
+<script>
+    var str = "2018-3-31 10:9:10";//2018年03月31日 10点10分10秒；
+    var resStr = "{0}年{1}月{2}日 {3}时{4}分{5}秒";
+    var ary = [];
+    str.replace(/\d+/g, function () {
+        ary.push(arguments[0].length === 1 ? "0" + arguments[0] : arguments[0]);
+    });
+    // console.log(ary);
+
+    resStr = resStr.replace(/{(\d+)}/g, function () {
+        return ary[arguments[1]];
+    });
+    // console.log(resStr);
+
+    /**
+     * 在String的原型上：把指定时间格式的字符串换成我们想要的各种形式
+     * @returns {string}
+     */
+    String.prototype.gpFormatTime = function () {
+
+        var reg = /^(\d{4})(?:-|\/|\.|:)(\d{1,2})(?:-|\/|\.|:)(\d{1,2})(?:\s+)(\d{1,2})(?:-|\/|\.|:)(\d{1,2})(?:-|\/|\.|:)(\d{1,2})$/g;
+        var ary = [];
+        this.replace(reg, function () {
+            ary = ([].slice.call(arguments)).slice(1, 7);
+        });
+
+        var format = arguments[0] || "{0}年{1}月{2}日 {3}:{4}:{5}";
+        return format.replace(/{(\d+)}/g, function () {
+            var val = ary[arguments[1]];
+            return val.length === 1 ? "0" + val : val;
+        })
+    };
+    var str2 = '2018-3-31 10:09:10';
+    console.log(str2.gpFormatTime("{0}年{1}月{2}日 {3}:{4}:{5}"))
+
+
+
+</script>
+</body>
+</html>

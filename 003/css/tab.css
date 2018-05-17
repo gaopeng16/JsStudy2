@@ -1,0 +1,62 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: "Microsoft YaHei UI";
+    font-size: 14px;
+    -webkit-user-select: none;
+}
+
+.box {
+    width: 400px;
+    margin: 20px auto;
+    padding: 20px;
+    border: solid 1px #008000;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    -webkit-box-shadow: 3px 3px 10px 0 #dbeebd;
+    -moz-box-shadow: 3px 3px 10px 0 #dbeebd;
+    box-shadow: 3px 3px 10px 0 #dbeebd;
+}
+
+.box thead {
+    background: #008000;
+    color: #ffffff;
+}
+
+.box thead tr {
+    height: 35px;
+}
+.box thead tr th.cursor{
+    cursor: pointer;
+}
+.box thead tr th {
+    width: 100px;
+    text-align: center;
+}
+
+.box tbody tr {
+    height: 30px;
+}
+
+.box tbody tr td {
+    width: 100px;
+    text-align: center;
+}
+
+.box tbody tr.bg {
+    background: lightgreen;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

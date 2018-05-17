@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        window.onload = function () {
+            /**
+             * 函数私有属性
+             * ->name: 函数名
+             * ->prototype: 类的原型，在原型上定义的方法都是当前函数这个类实例的公有方法
+             * ->__proto__:把函数当做一个普通的对象，指向Function这个类的原型
+             */
+
+            /**
+             * 函数在整个JS中是最复杂也是最重要的只是
+             * 1.一个函数存在了多面性：
+             * a)->它本身就是一个普通的函数，执行的时候形成私有的作用域(闭包),形参赋值,预解释,代码执行,执行完后栈内存销毁/不销毁
+             * b)->“类”：它有自己的实例，也有一个叫做prototype的属性是自己的原型,他的实例都可以指向自己的原型
+             * c)->“普通对象”:和 var obj={}中的obj一样,就是一个普通的对象，他作为对象可以有一些自己的私有属性,也可以通过__proto__找到Function.prototype
+             *
+             * a,b,c,三者之间没有必然的联系
+             */
+
+            function Fn() {
+                var num = 500;//Fn作为普通函数的时候
+                this.x = 100;
+            }
+
+            Fn.prototype.getX = function () {
+                console.log(this.x);
+            };
+            Fn.aaa = 1000;//Fn作为对象的时候
+            var f = new Fn;
+
+            // f.num ->undefined
+            // f.aaa ->undefined
+            //var res=Fn();//Fn中的this是window没有'.'  res->undefined
+            //Fn.aaa -> 1000;
+
+        }
+    </script>
+</head>
+<body>
+
+<img src="image/原型链终结版.png" alt="">
+</body>
+</html>

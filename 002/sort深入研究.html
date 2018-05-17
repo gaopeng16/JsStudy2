@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    var ary = [12, 23, 15, 34, 32, 1, 14, 17, 5, 67];
+    //ary.sort();//这样只能处理10以内的数字排序
+
+    //给二维数组排序
+    var ary2 = [
+        {name: '张三', age: 12},
+        {name: '李四', age: 23},
+        {name: '王五', age: 18},
+        {name: '赵六', age: 20},
+        {name: '周七', age: 30}
+    ];
+    ary2.sort(function (a, b) {
+        //a是当前项，b是下一项
+        //return parseFloat(a.age) - parseFloat(b.age);
+        //非数字比较
+        return a.name.localeCompare(b.name);
+    });
+    console.log(ary2);
+</script>
+</body>
+</html>

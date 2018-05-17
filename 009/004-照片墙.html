@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        ul {
+            list-style: none;
+            width: 480px;
+            height: 660px;
+            margin: 50px auto;
+            background: #abcdef;
+        }
+
+        ul li {
+            width: 150px;
+            height: 150px;
+            float: left;
+            overflow: hidden;
+            margin: 5px;
+            background: #000;
+            text-align: center;
+        }
+
+        ul li img {
+            width: 130px;
+            height: 130px;
+            margin-top: 10px;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+<ul>
+    <li><img src="img/1.jpg"></li>
+    <li><img src="img/2.jpg"></li>
+    <li><img src="img/3.jpg"></li>
+    <li><img src="img/4.jpg"></li>
+    <li><img src="img/5.jpg"></li>
+    <li><img src="img/6.jpg"></li>
+    <li><img src="img/7.png"></li>
+    <li><img src="img/8.jpg"></li>
+    <li><img src="img/9.jpg"></li>
+    <li><img src="img/10.jpg"></li>
+    <li><img src="img/11.jpg"></li>
+    <li><img src="img/12.jpg"></li>
+</ul>
+<script src="js/event.js"></script>
+<script src="js/drag.js"></script>
+<script src="js/tween.js"></script>
+<script src="js/utils.js"></script>
+<script>
+    var oLis = document.getElementsByTagName("li");
+    for (var i = oLis.length - 1; i >= 0; i--) {
+        var oLi = oLis.item(i);
+        oLi.l = oLi.offsetLeft;
+        oLi.t = oLi.offsetTop;
+        oLi.style.left = oLi.l + 'px';
+        oLi.style.top = oLi.t + 'px';
+        oLi.style.position = "absolute";
+        oLi.style.margin = 0;
+
+        gpEvent.on(oLi, "mousedown", gpDrag.down);
+        gpEvent.on(oLi, "selfDragStart", increaseZIndex);
+        gpEvent.on(oLi, "selfDragging", getHitedEle);
+        gpEvent.on(oLi, "selfDragEnd", changePosition);
+
+    }
+    var zIndex = 1;
+
+    function increaseZIndex() {
+        this.style.zIndex = ++zIndex;
+    }
+
+    //是否碰撞
+    function isHited(r, b) {
+        if (r.offsetLeft + r.offsetWidth < b.offsetLeft || r.offsetTop + r.offsetHeight < b.offsetTop || r.offsetLeft > b.offsetLeft + b.offsetWidth || r.offsetTop > b.offsetTop + b.offsetHeight) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    //获取到当前碰撞到的
+    function getHitedEle() {
+        this["aHitedEle"] = [];//鼠标碰撞到的都放到数组中
+        for (var i = 0; i < oLis.length; i++) {
+            var oLi = oLis[i];
+            if (this === oLi) continue;//自己与自己不做检测
+            oLi.style.backgroundColor = "";
+            if (isHited(this, oLi)) {
+                oLi.style.backgroundColor = "orange";
+                this["aHitedEle"].push(oLi);
+            }
+        }
+    }
+
+    //改变当前 元素左上角 与 碰撞到元素左上角 的距离最短的 位置
+    function changePosition() {
+        var a = this["aHitedEle"];
+        if (a && a.length) {
+            var oMin = {};
+            for (var i = 0; i < a.length; i++) {
+                var oLi = a[i];
+                if (!oMin.ele) {
+                    oMin.min = Math.sqrt(Math.pow(this.offsetLeft - oLi.offsetLeft, 2) + Math.pow(this.offsetTop - oLi.offsetTop, 2));
+                    oMin.ele = oLi;
+                } else {
+                    var dis = Math.sqrt(Math.pow(this.offsetLeft - oLi.offsetLeft, 2) + Math.pow(this.offsetTop - oLi.offsetTop, 2));
+                    if (oMin.min > dis) {
+                        oMin.min = dis;
+                        oMin.ele = oLi;
+                    }
+                }
+            }
+            //oMin.ele.style.left = this.l + "px";
+            //oMin.ele.style.top = this.t + "px";
+            //this.style.left = oMin.ele.l + "px";
+            //this.style.top = oMin.ele.t + "px";
+            var ele = oMin.ele;
+            animate(ele, {left: this.l, top: this.t}, 600, 3);
+            animate(this, {left: ele.l, top: ele.t}, 600, 3);
+
+            var objTemp = {l: this.l, t: this.t};
+
+            this.l = oMin.ele.l;
+            this.t = oMin.ele.t;
+            oMin.ele.l = objTemp.l;
+            oMin.ele.t = objTemp.t;
+
+        } else {
+            animate(this, {left: this.l, top: this.t}, 600, 3);
+        }
+    }
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="div" haha="haha"></div>
+<script src="../jquery-1.11.3.js"></script>
+<script>
+    var oDiv = document.getElementById('div');
+    var $oDiv = $("#div");
+    //原生JS对象和jQuery对象之间的转换
+    //->把原生的转变为jQuery
+    console.log($(oDiv).attr("haha"));
+    //->把jQuery的转变为原生
+    console.log($oDiv[0].getAttribute("haha"));
+    console.log($oDiv.get(0).getAttribute("haha"));
+
+    //$("#div+")获取下一个弟弟
+    //$("#div+ul")获取下一个弟弟并且标签名为ul的
+    //$("#div~")获取所有的弟弟节点
+    //$("#div~ul")在所有的弟弟节点中查找标签名为ul的
+    //:first :last :not :even :odd
+    //:eq 通过索引获取集合中的某一个
+    //:gt 大于某个索引的，不包含该索引
+    //:lt 小于某个索引的，不包含该索引
+    //:contains:获取的所有节点中包含给定内容的
+
+    //================jQuery的回调函数
+    // function fn1(value) {
+    //     console.log("fn1:" + value);
+    // }
+    //
+    // function fn2(value) {
+    //     console.log("fn2:" + value);
+    // }
+    //
+    // var $call = $.Callbacks();//创建一个回调函数的列表集合
+    // $call.add(fn1);//向集合中增加一个叫做fn1的函数
+    // $call.fire(100);//触发fire方法的时候，把函数集合中的方法执行，并且把对应的参数值传递给对应的方法
+    // $call.add(fn2);
+    // $call.fire(200);
+    // $call.remove(fn1);//在集合中溢出fn1这个方法
+    // $call.fire(200);
+
+    //===============属性
+    //attr/removeAttr：传个对象，就是批量设置
+    //prop/removeProp:也是设置属性(和attr是不同的两套方式，不能混用)
+    //prop内置的属性(class,style)可以在HTML结构中体现出来，非内置的体现不出来，但是可以获取到值
+    //attr一般都是用来设置和操作元素的自定义属性的，而prop一般都是用来操作元素的内置属性的(尤其是表单元素的操作，我们大部分都在使用prop)
+    //addClass/removeClass
+    //toggleClass
+
+    //jQuery(selector,context) context是上下文，一般不需要传递，默认是document，但是我们也可以指定具体的上下文来获取需要的元素$("div",$box)<==> $("#box div")
+    //通过jQuery选择器获取到一个集合，然后让集合直接调用jQuery中提供的方法，相当于给集合中的每一个元素都调取了对应的方法（jQuery内置循环操作）
+
+    //===============css
+    //offset:不管父级参照物是谁，获取距离BODY的偏移距离(left/top)
+    //position:获取到参照物的偏移距离(left/top)
+    //scrollTop/scrollLeft
+
+    //===============文档
+    //$oDiv.replaceAll("ul");页面中所有的ul都让$oDiv给替换了
+
+    //===============筛选
+    //map:变量jQuery集合中的每一项，并且可以支持返回值把每一项进行修改，类似于数组中的map这个方法
+    //eq(),first(),last
+    // filter:同级过滤 首先通过选择器获取一个集合，在在获取的内容中进行二次筛选
+    // children：子集过滤
+    // find：后代过滤
+    //第二个参数传jQuery对象还是Js原生对象是不一样的
+    //$("*",$box) -> context:document selector:"#box *"
+    //$("*",document.getElementById("box")) -> context:div#box selector:"*"
+
+    //===============工具
+    //循环选择器获取到的jQuery集合中的每一项
+    /*$("div").each(function (index, item) {
+        console.log(item);
+    });*/
+    //循环数组、类数组、对象中的每一项
+    /*$.each([1, 2, 3], function () {
+        console.log(item);
+    })*/
+    //$.makeArray===>listToArray
+
+    //===============动画
+    //stop():立刻停止当前动画，在当前位置执行下一次动画
+    //finish():立刻停止当前动画，返回开头再执行下一次动画
+
+    //1)向jQuery属性名上扩展(把她当做一个对象)->完善类库，给类库增加核心的方法
+    jQuery.extend({
+        aa: function () {
+            console.log("aa");
+        }
+    });
+    $.aa();
+    //2)向jQuery原型上扩展(把它当做一个类)->编写一些基于jQuery插件
+    jQuery.fn.extend({
+        bb: function () {
+            console.log("bb");
+        }
+    });
+    $().bb();
+    // console.log($("<div>"));
+    // console.log($("#div"));
+</script>
+</body>
+</html>

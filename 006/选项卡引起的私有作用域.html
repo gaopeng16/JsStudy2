@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="div">
+    <ul id="ul">
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+    <div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+    <div></div>
+    <div></div>
+</div>
+<script src="../utils.js"></script>
+<script>
+    var oDiv = document.getElementById('div');
+    var oUl = document.getElementById('ul');
+    var oLis = utils.children(oUl);
+    var oDivs = utils.children(oDiv, "div");
+    /**
+     * 1.JS中所有的事件绑定都是异步编程，开始我们只是给元素的点及行为绑定了一个方法，但是需要手动点击才会执行这个方法，在此期间，不会干等着点击，继续执行洗一次循环，当点击的时候，循环早已经结束
+     * 2.在给元素绑定事件的时候，绑定的这个方法还只是定义的部分，此时方法中村粗的都是字符串，我们看到的i只是一个字符
+     * 3.当点击的时候，执行对应的绑定的方法，形成一个私有的作用域A，在A中会使用到变量i，而i不是自己私有的，是上级作用域window下的i，此时window下的i已经变为aLi.length了
+     */
+    //给每个li添加一个私有属性
+    for (var i = 0; i < oLis.length; i++) {
+        oLis[i].index = i;
+        oLis[i].onclick = function () {
+            changeTab(this.index);
+        }
+    }
+
+    //该方式每循环一次，就会形成一个不销毁的私有作用域
+    for (var j = 0; j < oLis.length; j++) {
+        ~function (j) {
+            oLis[j].onclick = function () {
+                changeTab(j);
+            }
+        }(j)
+    }
+
+    //该方式每循环一次，就会形成一个不销毁的私有作用域
+    for (var k = 0; k < oLis.length; k++) {
+        oLis[k].onclick = (function (k) {
+            return function () {
+                changeTab(k);
+            }
+        })(k)
+    }
+
+    function changeTab(index) {
+
+    }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        'use strict';//告诉当前浏览器接下来的代码将按照严格模式进行编写
+        var obj = {name: 'lisi'};
+
+        function fn(num1, num2) {
+            console.log(num1 + num2, this);
+        }
+
+        //fn.call(100, 200);//this->100,num1=200,num2=undefined
+        //fn.call(obj, 100, 200);//this->obj,num1=100,num2=200
+
+        //fn.call();//this->window   严格模式下this->undefined
+        //fn.call(null);//this->window  严格模式下this->null
+        //fn.call(undefined);//this->window  严格模式下this->undefined
+
+        //apply和call方法的作用是一模一样的,
+        //call在给fn传递参数的时候，是一个个传递的，而apply是将要传的参数放到数组中，但是也相当于一个个的给fn的参数赋值，这也是他俩的唯一区别
+        fn.apply(obj, [100, 200]);
+
+        //bind：IE6~8不兼容 ->和call/apply类似 只是改变了fn中的this为obj，并且给fn传递了两个参数值，但是此时并没有把fn这个函数执行,执行bind会有一个返回值，这个返回值就是把fn的this改变后的那个结果
+        //->预处理：事先吧fn的this改变为我们想要的结果，并且把对应的参数值也准备好，以后要用到了，直接执行即可
+        var temp = fn.bind(obj, 100, 200);
+        temp();
+    </script>
+</head>
+<body>
+
+</body>
+</html>

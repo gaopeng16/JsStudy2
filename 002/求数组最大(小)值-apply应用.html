@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        /**
+         * 应用一
+         */
+            //4.利用apply
+        var ary = [23, 41, 21, 31, 54, 6, 22, 8, 75, 92];
+        //Math.max(23,41,21,31,54,6,22,8,75,92);
+        //利用了apply虽然传的是个数组，但相当于一个个的赋值
+        var max = Math.max.apply(null, ary);
+        var min = Math.min.apply(null, ary);
+        console.log(max, min);
+
+        //1.排序法
+        var ary = [23, 41, 21, 31, 54, 6, 22, 8, 75, 92];
+        ary.sort(function (a, b) {
+            return a - b
+        });
+        var max1 = ary[ary.length - 1];
+        var min1 = ary[0];
+        console.log(max1, min1);
+
+        //2.字符串拼接
+        var max2 = eval("Math.max(" + ary.toString() + ")");
+        var min2 = eval("Math.min(" + ary.toString() + ")");
+        console.log(max2, min2);
+        //3.假设法
+        var max3 = ary[0];
+        var min3 = ary[0];
+        for (var i = 0; i < ary.length; i++) {
+            var cur = ary[i];
+            cur > max3 ? max3 = cur : null;
+            cur < min3 ? min3 = cur : null
+        }
+        console.log(max3, min3);
+
+        //括号表达式
+        function fn1() {
+            console.log(this);
+        }
+
+        function fn2() {
+            console.log(this);
+        }
+
+        var obj = {name: '李四', fn: fn2};
+        //(fn1,fn2)(); // 只执行了最后一个fn2，(x1,x2,x3...)括号表达式，一个括号中出现多项内容，中间用‘,’号隔开，但是最后获取到的结果只有最后一项
+        //(fn1,obj.fn)();//执行的是obj.fn,但是执行的时候里面的this变为了window而不是obj
+        //原因是把obj.fn替换成了function fn2() { console.log(this); }也就是相当于
+        //(fn1,function fn2() { console.log(this); })(); 因此里面的this就是window
+        //而当里面只有一个的时候，如下
+        //(obj.fn)();//里面的this还是obj
+
+        /**
+         * 应用二:
+         * 前提是类数组，能借用数组的所有方法，操作和操作数组一样
+         * 借用数组原型上的slice方法，当slice执行的时候，让方法中的this变为我要处理的arguments，实现将类数组arguments转换为数组
+         */
+        function avgFn() {
+            //也可以借用数组原型的方法：
+            //Array.prototype.sort.call(arguments,function(a,b){return a-b});
+            //[].sort.call(arguments,function(a,b){return a-b});
+
+
+            //->将类数组转换为数组：把arguments克隆一份一模一样的数组出来
+            //var ary = Array.prototype.slice.call(arguments);
+            //任何一个数组实例，都能找到数组原型上的方法
+            var ary = [].slice.call(arguments);
+            ary.sort(function (a, b) {
+                return a - b
+            });
+            ary.pop();
+            ary.shift();
+            return (eval(ary.join("+")) / ary.length).toFixed(2);
+        }
+        console.log(avgFn(23, 41, 21, 31, 54, 6, 22, 8, 75, 92));
+        /**
+         * avgFn()方法的原理
+         * 模拟内置的slice实现数组克隆的功能
+         */
+        Array.prototype.mySlice = function () {
+            //内置的代码
+            var ary = [];
+            for (var i = 0; i < this.length; i++) {
+                ary[ary.length] = this[i];
+            }
+
+            //我自己写的一份把arguments转换为数组的代码
+            //就相当于把内置的this换成arguments，因此用到call或者apply
+            var ary1 = [];
+            for (var i = 0; i < arguments.length; i++) {
+                ary1[ary1.length] = arguments[i];
+            }
+        }
+
+    </script>
+</head>
+<body>
+
+</body>
+</html>

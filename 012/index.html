@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>客户信息首页</title>
+    <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+
+<div class="box" id="box">
+    <a href="add.html" class="link">增加客户</a>
+    <h3 class="head">
+        <span class="w50">编号</span>
+        <span class="w150">姓名</span>
+        <span class="w50">年龄</span>
+        <span class="w200">电话</span>
+        <span class="w200">地址</span>
+        <span class="w150">操作</span>
+    </h3>
+    <ul class="list" id="list">
+        <!--<li>
+            <span class="w50">1</span>
+            <span class="w150">张三</span>
+            <span class="w50">3</span>
+            <span class="w200">3216541313</span>
+            <span class="w200">XXXXXXX</span>
+            <span class="w150 control">
+                <a href="javascript:">修改</a>
+                <a href="javascript:">删除</a>
+            </span>
+        </li>-->
+    </ul>
+</div>
+<script src="js/ajax.js"></script>
+<script>
+    var oList = document.getElementById('list');
+
+    var customModule = (function () {
+        function removeCustom() {
+            oList.onclick = function (ev) {
+                var e = ev || event;
+                var tar = e.target || e.srcElement,
+                    tarTag = tar.tagName.toUpperCase();
+                if (tarTag === "A" && tar.innerHTML === "删除") {
+                    var customId = tar.getAttribute("customId");
+                    var flag = window.confirm("确定要删除编号为 " + customId + " 的客户？");
+                    if (flag) {
+                        ajax({
+                            url: "/removeInfo?id=" + customId,
+                            success: function (data) {
+                                if (data && data.code == 0) {
+                                    oList.removeChild(tar.parentNode.parentNode);
+                                    return;
+                                }
+                                alert(data.msg);
+                            }
+                        });
+                    }
+                }
+            }
+        }
+
+        function bindHTML(data) {
+            var str = '';
+            for (var i = 0; i < data.length; i++) {
+                var curData = data[i];
+                str += '<li>';
+                str += '<span class="w50">' + curData["id"] + '</span>';
+                str += '<span class="w150">' + curData["name"] + '</span>';
+                str += '<span class="w50">' + curData["age"] + '</span>';
+                str += '<span class="w200">' + curData["phone"] + '</span>';
+                str += '<span class="w200">' + curData["address"] + '</span>';
+                str += '<span class="w150 control">';
+                str += '<a href="add.html?id=' + curData["id"] + '">修改</a>';
+                str += '<a href="javascript:;" customId="' + curData["id"] + '">删除</a>';
+                str += '</span>';
+                str += '</li>';
+            }
+            oList.innerHTML = str;
+        }
+
+        function init() {
+            ajax({
+                url: '/getList',
+                success: function (data) {
+                    if (data && data.code == 0) {
+                        var data = data["data"];
+                        bindHTML(data);
+                        removeCustom();
+                    }
+                }
+            })
+        }
+
+        return {
+            init: init
+        }
+    })();
+    customModule.init();
+</script>
+</body>
+</html>

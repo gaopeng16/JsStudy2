@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
+    <link rel="stylesheet" href="css/reset.css">
+    <!-- LESS -->
+    <link rel="stylesheet/less" href="css/index.less">
+    <script src="js/less.min.js"></script>
+</head>
+<body>
+<section class="main" id="main">
+    <!--HEADER-->
+    <header class="header">
+        <div class="con">
+            <h1 class="logo">腾讯体育</h1>
+            <span class="type">NBA</span>
+            <span class="menu"></span>
+            <span class="login">登录</span>
+        </div>
+        <nav class="nav">
+            <a href="#">NBA</a>
+            <a href="#">CBA</a>
+            <a href="#">英超</a>
+            <a href="#">欧冠</a>
+            <a href="#">亚冠</a>
+            <a href="#">西甲</a>
+            <a href="#">德甲</a>
+            <a href="#">意甲</a>
+            <a href="#">法甲</a>
+            <a href="#">中超</a>
+            <a href="#">NFL</a>
+            <a href="#">综合</a>
+            <a href="#">欧洲</a>
+            <a href="#">社区</a>
+            <a href="#">下载</a>
+        </nav>
+    </header>
+
+    <!--VIDEO-->
+    <!--只用 preload="none" 的时候，poster才会起作用-->
+    <section class="videoArea">
+        <video controls preload="none" poster="images/poster.png"
+               src="http://60.217.249.145/sports.tc.qq.com/ApblUtccYsraszyGWDHJYjI77KKzVpuPwu_eoRtNIgbk/y00260e7zsr.mp4?vkey=88A7223169BC9AD17F2AB6491297592D63509250B67F3DCF85C177F94A33FEA627DFF6B09B838ADD0B7E5D9C6920C9EB292C6BBA3DF0397563AFFC48E97802D0B55BA3E7E31A5FFF9AA26F0F2B404C2F9CFAC6A5FFD3089D047A1C6F2E2EE9C6F734F4A52939817021D95593C0FFA9BD58B688FF8942406F&br=121&platform=2&fmt=auto&level=0&sdtfrom=v3010&guid=4dc35a29d92ca04b751de3a311f63fd7"></video>
+    </section>
+
+    <!--MATCH INFO-->
+    <section class="matchInfo">
+    </section>
+
+    <!--MATCH LIST-->
+    <section class="matchList">
+        <ul class="clear" style="overflow: hidden;">
+            <!--<li>
+                <div>
+                    <img src="images/pic.jpg">
+                    <span>02:03</span>
+                </div>
+                <p-->>这是一场非常激烈的比赛，真的很刺激的</p>
+            </li>
+        </ul>
+    </section>
+
+</section>
+
+<script src="js/zepto.js"></script>
+<script src="js/iscroll.js"></script>
+<script src="js/ejs.min.js"></script>
+<script src="js/index.js"></script>
+
+<script type="text/template" id="matchInfoTemplate">
+    <div class="top">
+        <div class="home">
+            <img src="<%= matchInfo.leftBadge %>">
+            <span><%= matchInfo.leftGoal %></span>
+        </div>
+        <div class="time"><%= matchInfo.startTime.formatTime('{1}月{2}日{3}:{4}')%></div>
+        <div class="away">
+            <span><%= matchInfo.rightGoal%></span>
+            <img src="<%= matchInfo.rightBadge %>">
+        </div>
+    </div>
+    <div class="middle">
+        <span></span>
+    </div>
+    <div class="bottom">
+        <span class="home" type="1"><%= matchInfo.leftSupport %></span>
+        <span class="type"><%= matchInfo.matchDesc %></span>
+        <span class="away" type="2"><%= matchInfo.rightSupport %></span>
+    </div>
+</script>
+
+<script type="text/template" id="matchListTemplate">
+    <% $.each(matchList,function(index,item){%>
+    <li class="<%= index===0?'bg':''%>">
+        <div>
+            <img src="<%= item['pic']%>">
+            <span><%= item.duration.substring(item.duration.indexOf(':')+1)%></span>
+        </div>
+        <p><%= item['title']%></p>
+    </li>
+    <%})%>
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    //回流(重排):当页面中的HTML结构发生改变(增加、删除、位置发生改变..),浏览器都需要重新的计算一遍最新的DOM结构，从新的对当前的页面进行渲染
+    //重绘：某一个元素的部分样式发生改变了，浏览器只需要重新的渲染当前的元素即可
+
+    //文档碎片:创建一个文档碎片，相当于临时创建了一个容器
+    //var frg = document.createDocumentFragment();
+    //for (var i = 0; i < ary.length; i++) {
+    //    var oLi = document.createElement('li');
+    //    frg.appendChild(oLi);
+    //}
+    //oUl.appendChild(frg);//只引发了一次回流
+    //frg = null; //frg只是一个临时的容器，用完之后手动释放堆内存
+</script>
+</body>
+</html>

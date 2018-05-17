@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        window.onload = function () {
+            var oLis = document.getElementsByTagName('div');
+            console.dir(oLis);//HtmlCollection元素集合的一个实例->它也是一个类数组集合
+
+            var oLs = document.getElementsByName('zhangsan');
+            console.dir(oLs);//NodeList节点集合->它也是一个类数组集合
+
+            //标准中
+            var arr = [].slice.call(oLis);
+            console.dir(arr);
+            //非标准
+            for (var i = 0; i < oLis.length; i++) {
+                arr[arr.length] = oLis[i];
+            }
+            // IE6~8中，不支持借用数组的slice实现将元素(节点)集合的类数组转换为数组，报错：'this'不是javascript的对象，
+            // 但是arguments是支持的
+
+        }
+    </script>
+</head>
+<body>
+<div>1</div>
+<div>2</div>
+<div>3</div>
+<div>4</div>
+<div>5</div>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        #box {
+            width: 200px;
+            height: 200px;
+            border: solid 10px #abcdef;
+            padding: 30px;
+            margin: 100px;
+        }
+    </style>
+</head>
+<body>
+<div id="box" class="test test1 test2" name="text" index="0">
+    要想得到你必须要付出，要付出还要学会坚持，如果你觉得真的很难，那你就放弃，但是一旦放弃就不要抱怨，我觉得人生就是这样，世界真的是平平衡的，每个人都是通过自己的努力，去决定自己生活的样子！
+    要想得到你必须要付出，要付出还要学会坚持，如果你觉得真的很难，那你就放弃，但是一旦放弃就不要抱怨，我觉得人生就是这样，世界真的是平平衡的，每个人都是通过自己的努力，去决定自己生活的样子！
+</div>
+<script>
+    var box = document.getElementById('box');
+    console.dir(box);
+    console.log(box.attributes.getNamedItem('name'));
+    console.log(box.attributes.item(1));
+    console.log(box.classList);
+    console.log(box.classList.add("test3"));
+    console.log(box.classList.remove("test2"));
+
+    //内容宽高：如果样式中设置了高度，就是样式中的高度，如果没有设置高度，那么就是内容的高度
+    //真实宽高：如果有溢出，就是内容的高度
+
+    //1.client系列(当前元素的几个私有的属性)
+    //clientWidth/clientHeight:内容宽/高+填充(和内容溢出没有关系)
+    //clientLeft/clientTop:左/上边框的大小(border[left/top]Width)
+
+    //2.offset系列
+    //offsetWidth/offsetHeight:clientWidth/clientHeight + 边框(和内容溢出没有关系)
+    //offsetParent:当前元素的父级参照物
+    //offsetLeft/offsetTop:当前元素外边框距离父级参照物的内边框的偏移量
+
+    //3.scroll系列
+    //scrollWidth/scrollHeight:和clientWidth/clientHeight一样(前提是容器中的内容没有溢出)
+    //如果容器中的内容有溢出，我们获取的结果如下规则：
+    //scrollWidth:真实内容的宽度，包含溢出的+左填充
+    //scrollHeight:真实内容的高度，包含溢出的+上填充
+    //获取到的结果都是“约等于”的值，因为：同一个浏览器，我们是否设置overflow='hidden';对于最后的结果是有影响的，在不同的浏览器中，我们获取到的结果也是不相同的
+
+    //scrollLeft/scrollTop:滚动条卷去的宽/高
+
+
+
+    //=====关于js盒子模型取值得问题
+    //值永远不可能出现小数(四舍五入)
+
+    //====对于浏览器
+    //clientWidth/clientHeight:当前浏览器可视区(一屏幕)的宽高
+    //scrollWidth/scrollHeight:当前页面的真实宽高度.
+    //无论哪些属性、无论哪些浏览器，无论获取还是设置，想要都兼容的话，需要写两套，如：
+    //document.documentElement[attr]||document.body[attr];//document.documentElement[attr]必须在前
+
+
+
+
+
+</script>
+</body>
+</html>

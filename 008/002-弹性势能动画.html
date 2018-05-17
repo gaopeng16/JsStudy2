@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0
+        }
+
+        #box {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: #abcdef;
+            top: 100px;
+            left: 100px;
+            cursor: move;
+        }
+    </style>
+</head>
+<body>
+<div id="box"></div>
+<script src="../event.js"></script>
+<script>
+    //1。当拖拽结束的是，让当前的元素同时水平+垂直运动
+    var oBox = document.getElementById('box');
+
+    gpEvent.on(oBox, "mousedown", down);
+
+    function down(e) {
+        this["strX"] = e.clientX;
+        this["strY"] = e.clientY;
+        this["strL"] = this.offsetLeft;
+        this["strT"] = this.offsetTop;
+
+        if (this.setCapture) {//ie和火狐
+            this.setCapture();
+            gpEvent.on(this, "mousemove", move);
+            gpEvent.on(this, "mouseup", up);
+        } else {
+            var _this = this;
+            this.MOVE = function (e) {
+                move.call(_this, e);
+            };
+            this.UP = function (e) {
+                up.call(_this, e);
+            };
+            gpEvent.on(document, "mousemove", this.MOVE);
+            gpEvent.on(document, "mouseup", this.UP);
+
+            //鼠标按下的时候，清除定时器，以免跟鼠标抬起后调用的startMove()的定时器冲突
+            window.clearInterval(this.flyTimer);
+            window.clearInterval(this.dropTimer);
+        }
+    }
+
+    function move(e) {
+        var curL = e.clientX - this["strX"] + this["strL"];
+        var curT = e.clientY - this["strY"] + this["strT"];
+        var minL = 0, minT = 0,
+            maxL = (document.documentElement.clientWidth || document.body.clientWidth) - this.offsetWidth,
+            maxT = (document.documentElement.clientHeight || document.body.clientHeight) - this.offsetHeight;
+
+        curL = curL <= minL ? minL : (curL >= maxL ? maxL : curL);
+        curT = curT <= minT ? minT : (curT >= maxT ? maxT : curT);
+
+        this.style.left = curL + "px";
+        this.style.top = curT + "px";
+
+        //计算水平方向移动端的速度
+        if (!this.pre) {
+            this.pre = this.offsetLeft;
+        } else {
+            this.speedX = this.offsetLeft - this.pre;
+            this.pre = this.offsetLeft;
+        }
+    }
+
+    function up() {
+        if (this.releaseCapture) {
+            this.releaseCapture();
+            gpEvent.off(this, "mousemove", move);
+            gpEvent.off(this, "mouseup", up);
+        } else {
+            gpEvent.off(document, "mousemove", this.MOVE);
+            gpEvent.off(document, "mouseup", this.UP);
+        }
+
+        //当鼠标结束拖拽的时候，开始进行水平方向的动画运动
+        fly.call(this);
+        //当鼠标结束拖拽的时候，开始进行垂直方向的动画运动
+        drop.call(this);
+
+    }
+
+    function fly() {
+        window.clearInterval(this.flyTimer);
+        var _this = this;
+        this.flyTimer = window.setInterval(function () {
+
+            if (Math.abs(_this.speedX) < 0.5) {
+                window.clearInterval(_this.flyTimer);
+                return;
+            }
+
+            _this.speedX *= 0.95;
+            var curL = _this.offsetLeft + _this.speedX;//如果_this.speedX的值小于0.5，下次再获取_this.offsetLeft时，就四舍五入了，相当于没有加上
+            var minL = 0,
+                maxL = (document.documentElement.clientWidth || document.body.clientWidth) - _this.offsetWidth;
+            if (curL >= maxL) {
+                _this.style.left = maxL + 'px';
+                _this.speedX *= -1;
+            } else if (curL <= minL) {
+                _this.style.left = minL + 'px';
+                _this.speedX *= -1;
+            } else {
+                _this.style.left = curL + 'px';
+            }
+        }, 30);
+    }
+
+    function drop() {
+        window.clearInterval(this.dropTimer);
+        var _this = this;
+        this.dragFlag = 0;
+        this.dropTimer = window.setInterval(function () {
+
+            if (_this.dragFlag > 1) {
+                window.clearInterval(_this.speedY);
+            }
+
+            !_this.speedY ? _this.speedY = 9.18 : _this.speedY += 9.18;
+            _this.speedY *= 0.97;
+            var curT = _this.offsetTop + _this.speedY;
+            var maxT = (document.documentElement.clientHeight || document.body.clientHeight) - _this.offsetHeight;
+            if (curT >= maxT) {
+                _this.style.top = maxT + "px";
+                _this.speedY *= -1;
+                _this.dragFlag++;//落到最底了，就累加
+            } else {
+                _this.style.top = curT + "px";
+                _this.dragFlag = 0;//要是反弹了，让_this.dragFlag的值为0
+            }
+        }, 30);
+    }
+
+    /**
+     * 在JS盒子模型中 offsetLeft 获取到的值永远不会出现小数，它会把真是的left值按照四舍五入
+     * 进行计算
+     */
+</script>
+</body>
+</html>

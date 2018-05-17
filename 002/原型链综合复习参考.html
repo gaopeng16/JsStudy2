@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        /**
+         * 1.所有的函数数据类型(普通函数、类)都天生自带一个属性：prototype,它存储的值是一个对象数据类型，浏览器默认为其开辟一个堆内存
+         * 2.在浏览器给prototype默认开辟的这个堆内存上有一个默认的属性:constructor，指向当前类本身
+         * 3.所有对象数据类型(普通对象、数组、正则、实例、prototype)都天生自带一个属性：__proto__，指向当前实例所属类的原型
+         */
+        window.onload = function () {
+            function Fn() {
+                this.x = 100;
+                this.y = 200;
+            }
+            Fn.prototype.getX = function () {
+                console.log(this.x);
+            };
+            Fn.prototype.getY = function () {
+                console.log(this.y);
+            };
+            Fn.prototype.setX = function (n) {
+                this.x = n;
+            };
+            var f1 = new Fn;
+            var f2 = new Fn;
+
+            /**
+             * 1.看法方法执行的时候“.”前面是谁，this就是谁
+             * 2.把函数体中的this替换成分析的结果
+             * 3.按照原型链的查找模式找到对应的值即可
+             */
+            f1.getX();//this->f1,console.log(f1.x) 100
+            f1.__proto__.getX();//this->f1.__proto__,console.log(f1.__proto__.x) undefined
+            Fn.prototype.setX(300);//this->Fn.prototype,Fn.prototype.x = 300
+            f1.__proto__.getX();//this->f1.__proto__,console.log(f1.__proto__.x) 300
+            f1.setX(500);//this->f1,f1.x = 500
+            f1.getX();//this->f1,console.log(f1.x) 500
+        }
+    </script>
+</head>
+<body>
+
+</body>
+</html>

@@ -1,0 +1,95 @@
+== 封装，继承，多态 ==
+>>封装性，实现低内聚高耦合，减少代码的冗余
+>>什么是多态
+    多态是一个方法的多种形态->后台代码中包含(重载和重写)
+    ps:重载是方法名相同，参数的类型或者个数不同，
+    * JS中没有重载，但是可以实现类似重载的功能，例如：
+        function fn(num1,num2){'判断参数的值或者类型，执行不同的功能'}
+
+==构造函数模式、和工厂模式==
+    工厂模式：
+     function CreatePeople(name,age){
+        var obj = {};
+        obj.name = name;
+        obj.age = age;
+        obj.write = function(){
+            console.log('my name is' + obj.name +',age is'+ obj.age)
+        }
+        return obj;
+     }
+     var p1 = CreatePeople('zhangsan',18);
+     构造函数模式：
+     function CreatePeople(name,age){
+        this.name = name;
+        this.age = age;
+        this.write = function(){
+            console.log('my name is' + this.name +',age is'+ this.age)
+        }
+     }
+     var p1 =new CreatePeople('zhangsan',18);
+     >>相同点是--都是开辟一个新的作用域，从上往下执行代码
+     >>不同的是，1.构造函数不用手动创建对象，浏览器默认有一个对象，以这个对象(this)为函数执行的主题,将属性名和属性值赋值给该对象
+     >>2.前者是正常调用函数，p1为函数的返回值，而后者，需要new一下，继而CreatePeople(函数类型)就变成了类，p1(对象类型)为该类的一个实例
+     CreatePeople.prototype.write = function(){}
+     》1，每一个函数(普通函数、类)都有一个自带的属性：prototype，并且这个属性是一个对象数据类型的值
+     》2，并且在prototype上，浏览器天生就给它加了一个属性constructor(构造函数)，属性值是当前函数(类)本身
+     》3，每一个对象数据类型(普通对象、实例、prototype...)，也天生自带一个属性:__proto__,属性值是当前实例所属类的原型prototype
+
+
+=====JS优化法则=====
+1.注意手动释放内存
+2.尽量减少DOM回流
+
+
+=====网站性能优化=====
+1.尽量减少向服务器请求的次数“减少HTTP请求”
+2.css/js文件进行合并
+3.ICON图片合并->雪碧图/css sprite
+4.图片的延迟加载，数据的异步加载
+5.在移动端，如果做一个“简单的”宣传页，尽量把css和js写成内嵌式
+
+
+
+=====兼容=====
+~~e = e || window.event;
+~~e.target:事件源， ie6~8:e.srcElement
+  e.target = e.target || e.srcElement
+~~e.pageX/pageY:页面第一屏幕最上端的坐标值，IE6~8中没有这个属性，可以通过clientX+滚动条卷去的高度
+  e.pageX = e.pageX || e.clientX + (document.documentElement.scrollLeft || document.body.scrollLeft)
+~~e.preventDefault: 在IE6~8中没有这个方法，需要使用e.returnValue=false;
+  e.preventDefault ? e.preventDefault : e.returnValue=false;
+~~e.stopPropagation()：在IE6~8不兼容e.cancelBubble=true;
+  e.stopPropagation() ? e.stopPropagation : e.cancelBubble=true;
+~~鼠标焦点丢失：ie/ff setCapture()/releaseCapture  chrome:document.(onmousemove/onmouseup)
+~~addEventListener,在IE6~8不兼容attachEvent
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

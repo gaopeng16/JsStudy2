@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        .list {
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        li {
+            list-style: none;
+            height: 55px;
+            padding: 10px 0;
+            border-bottom: solid 1px #cccccc;
+            position: relative;
+        }
+
+        li > div:first-child {
+            width: 75px;
+            height: 55px;
+            background: url("img/default.gif") center no-repeat;
+            background-size: 100% 100%;
+            position: absolute;
+            left: 0;
+            top: 6px;
+        }
+
+        li > div:first-child img {
+            width: 100%;
+            display: none;
+            opacity: 0;
+        }
+
+        li > div:last-child {
+            margin-left: 80px;
+            height: 55px;
+        }
+
+        li > div:last-child h4 {
+            line-height: 20px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        li > div:last-child p {
+            line-height: 20px;
+            font-size: 12px;
+            color: #616161;
+        }
+    </style>
+</head>
+<body>
+<ul class="list" id="list">
+
+</ul>
+<script src="../utils.js"></script>
+<script>
+    var oList = document.getElementById('list');
+    var imgList = oList.getElementsByTagName('img');
+    var jsonData = null;
+
+    ~function () {
+        var xhr = new XMLHttpRequest();
+        xhr.open('get', 'list.txt?_' + Math.random(), false);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && /^2\d{2}$/.test(xhr.status)) {
+                var val = xhr.responseText;
+                jsonData = utils.formatJSON(val);
+            }
+        };
+        xhr.send();
+    }();
+    // console.log(jsonData);
+
+    ~function () {
+        var str = '';
+        if (jsonData) {
+            for (var i = 0; i < jsonData.length; i++) {
+                str += '<li>' +
+                    '<div><img src="' + jsonData[i]['img'] + '" trueImg="' + jsonData[i]["img"] + '"></div>' +
+                    '<div>' +
+                    '<h4>' + jsonData[i]["title"] + '</h4>' +
+                    '<p>' + jsonData[i]["desc"] + '</p>' +
+                    '</div>' +
+                    '</li>';
+            }
+        }
+        oList.innerHTML = str;
+    }();
+
+    function lazyImg(curImg) {
+        var oImg = new Image();
+        oImg.src = curImg.getAttribute('trueImg');
+        oImg.onload = function () {
+            curImg.src = this.src;
+            curImg.style.display = 'block';
+            fadeIn(curImg);
+            oImg = null;
+        };
+        curImg.isLoad = true;
+    }
+
+    //实现渐渐出现的效果
+    function fadeIn(curImg) {
+        var duration = 500, interval = 10, target = 1;
+        var step = target / duration * interval;
+        var timer = setInterval(function () {
+            var curOp = utils.css(curImg, 'opacity');
+            if (curOp >= 1) {
+                curImg.style.opacity = 1;
+                clearInterval(timer);
+                return;
+            }
+            curOp += step;
+            curImg.style.opacity = curOp;
+        }, interval)
+    }
+
+    function handleAllImg() {
+        for (var i = 0; i < imgList.length; i++) {
+            var curImg = imgList[i];
+            if (curImg.isLoad) {
+                continue;
+            }
+
+            var curParent = curImg.parentNode;//当前图片是隐藏的，我们计算的A的值其实是计算它父级容器的高度
+            var A = utils.offset(curParent).top + curParent.offsetHeight;
+            var B = utils.win('clientHeight') + utils.win('scrollTop');
+            if (A < B) {
+                lazyImg(curImg);
+            }
+        }
+    }
+
+    //开始的时候(过500ms后添加第一屏的图片，滚动条滚动的时候，加载其他图片)
+    window.setTimeout(handleAllImg, 500);
+    window.onscroll = handleAllImg;
+
+
+</script>
+</body>
+</html>

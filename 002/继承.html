@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        body {
+            font-family: "Microsoft YaHei UI"
+        }
+
+        .proto p {
+            padding-left: 30px;
+        }
+
+        .proto p span {
+            padding-left: 10px;
+            font-size: 12px;
+        }
+
+        .proto textarea {
+            margin-left: 100px;
+        }
+    </style>
+    <script>
+        window.onload = function () {
+            /**
+             * 1.原型继承
+             * 把父类私有的和公有的，都能让子类公有上，不是拿过来，而是增加连接关系，而且子类还可以修改父类(重写)
+             * @constructor
+             */
+            function A() {
+                this.x = 100;
+            }
+
+            A.prototype.getX = function () {
+                console.log(this.x);
+            };
+
+            function B() {
+                this.x = 200;
+            }
+
+            B.prototype = new A;
+
+            /**
+             * 2.call继承
+             * 把父类私有的变成子类私有的，完全拿过来，跟父类没有关系了
+             * 需要说明的是：A1想要作为类，必须被new，但是，此方法没有被new，只是作为一个普通函数而已，因此，A1就他谈不上有原型，所以只是继承父类私有的方法或属性
+             */
+            function A1() {
+                this.x = 100;
+            }
+
+            A1.prototype.getX = function () {
+                console.log(this.x);
+            };
+
+            function B1() {
+                A1.call(this);
+            }
+
+            /**
+             * 3. 冒充对象继承
+             * 把父类私有的和公有的 克隆一份给子类私有的
+             */
+            function A2() {
+                this.x = 100;
+            }
+
+            A2.prototype.getX = function () {
+                console.log(this.x);
+            };
+
+            function B2() {
+                var temp = new A2;
+                for (var key in temp) {
+                    this[key] = temp[key];
+                }
+                temp = null;
+            }
+
+            /**
+             * 4.混合模式继承
+             * 原型继承+call继承
+             */
+            function A3() {
+                this.x = 100;
+            }
+
+            A3.prototype.getX = function () {
+                console.log(this.x);
+            };
+
+            function B3() {
+                A3.call(this);
+            }
+
+            B3.prototype = new A3;
+            B3.prototype.constructor = B3;
+
+            /**
+             * 5.寄生组合式继承
+             */
+            function A4() {
+                this.x = 100;
+            }
+
+            A4.prototype.getX = function () {
+                console.log(this.x);
+            };
+
+            function B4() {
+                A4.call(this);
+            }
+
+            //Object.create 不兼容 678
+            //B4.prototype = Object.create(A4.prototype);
+            B4.prototype = objectCreate(A4.prototype);
+            B4.prototype.constructor = B4;
+
+            //自定义兼容
+            function objectCreate(o) {
+                function fn() {
+                }
+
+                fn.prototype = o;
+                return new fn;
+            }
+
+            /**
+             * 6.中间类继承法
+             * 原本类数组arguments的__proto__是指向Object的
+             * 而Array的__proto__也是是指向Object的
+             * 那么，可以让类数组arguments的__proto__先指向Array的原型，就可以有Array的方法
+             */
+            function avgFn() {
+                arguments.__proto__ = Array.prototype;
+                arguments.sort(function (a, b) {
+                    return a - b;
+                });
+                arguments.pop();
+                arguments.shift();
+                return (eval(arguments.join('+')) / arguments.length).toFixed(2)
+            }
+
+            /*function avgFn() {
+                Array.prototype.sort.call(arguments, function (a, b) {
+                    return a - b;
+                });
+                Array.prototype.pop.call(arguments);
+                Array.prototype.shift.call(arguments);
+                return (eval(Array.prototype.join.call(arguments, '+')) / arguments.length).toFixed(2)
+            }*/
+
+        }
+    </script>
+</head>
+<body>
+<a id="aa" href=""></a>
+<!--<img src="image/继承.png" alt="">-->
+<!-- div 、a 、document 、window-->
+<h1>=====div=====</h1>
+<div class="proto" id="div1">
+    <h3>1.Object</h3>
+    <p>~constructor</p>
+    <p>~hasOwnProperty(): <span>用于指示一个对象自身(不包括原型链)是否具有指定名称的属性，如果有返回true,否则返回false</span></p>
+    <p>~isPrototyOf: <span>用于指示对象是否存在于另一个对象的原型链中。如果存在，返回true，否则返回false。</span></p>
+    <p>~propertyIsEnumberable():<span>方法返回布尔值，该值指示指定属性是否为对象的一部分以及该属性是否是可枚举的。</span></p>
+    <p>~toLocaleString():<span>用于将当前对象以字符串值的形式返回，该字符串的格式适合当前宿主环境的当前区域设置。</span></p>
+    <p>~toString()<span>用于将当前对象以字符串的形式返回。</span></p>
+    <p>~valueOf()<span>用于返回指定对象的原始值。</span></p>
+</div>
+
+<hr>
+
+<div class="proto">
+    <h3>2.EventTarget</h3>
+    <p>~constructor</p>
+    <p>~addEventListener():<span>向指定元素添加事件句柄。</span></p>
+    <p>~dispatchEvent(): <span>给节点分派一个合成事件。(ps:通过IE->fireEvent() 触发的事件不会触发事件的默认行为)</span></p>
+    <p>ps:<textarea name="" id="" cols="100" rows="10"><script type="text/javascript">
+    //document上绑定自定义事件oneating
+    document.addEventListener('oneating', function (event) {
+        alert(event.mingzi + '，' + event.message);
+    }, false);
+
+    //创建event的对象实例。
+    var event = document.createEvent('HTMLEvents');
+    // 3个参数：事件类型，是否冒泡，是否阻止浏览器的默认行为
+    event.initEvent("oneating", true, true);
+    /*属性，随便自己定义*/
+    event.mingzi = 'hello,我是李小贱';
+    event.message = '我今天24岁';
+
+    //触发自定义事件oneating
+    document.dispatchEvent(event);
+
+    //=========兼容问题
+    var fireEvent = function (element, event) {
+        if (document.createEventObject) {
+            // IE浏览器支持fireEvent方法
+            var evt = document.createEventObject();
+            return element.fireEvent('on' + event, evt)
+        }
+        else {
+            // 其他标准浏览器使用dispatchEvent方法
+            var evt = document.createEvent('HTMLEvents');
+            evt.initEvent(event, true, true);
+            return !element.dispatchEvent(evt);
+        }
+    };
+</script>
+        </textarea></p>
+    <p>~removeEventListener():<span>移除由 addEventListener() 方法添加的事件句柄。</span></p>
+</div>
+<hr>
+<div class="proto">
+    <h3>3.Node</h3>
+    <p>~appendChild():<span>node.appendChild(node)-向节点添加最后一个子节点。</span></p>
+    <p>
+        ~cloneNode():<span>node.cloneNode(deep)-创建节点的拷贝，并返回该副本。克隆所有属性以及它们的值。如果您需要克隆所有后代，请把 deep 参数设置 true，否则设置为 false。</span>
+    </p>
+    <p>~compareDocumentPosition():<span>node.compareDocumentPosition(node)-比较两个节点，并返回描述它们在文档中位置的整数。</span></p>
+    <p>~contains():<span>比较两个节点，并返回描述它们在文档中位置的整数。</span></p>
+    <p>~getRootNode():<span>属性返回上下文的根节点</span></p>
+    <p>~hasChildNodes():<span>node.hasChildNodes()-查看是否有子节点</span></p>
+    <p>~insertBefore():<span>node.insertBefore(newnode,existingnode)-在已有的子节点前插入一个新的子节点。</span></p>
+    <p>~isDefaultNamespace():<span>node.isDefaultNamespace(namespaceURI)-查看定义的命名空间是否为默认的命名空间,如果指定的命名空间是默认的返回 true，否则返回 false。 </span>
+    </p>
+    <p>~isEqualNode():<span>node.isEqualNode(node)-用于检查两个节点是否相等。</span></p>
+    <p>~isSameNode():<span>该方法在 DOM 4后已经废弃该</span></p>
+    <p>~normalize():<span>合并相邻的文本节点并删除空的文本节点。</span></p>
+    <p>~removeChild():<span>node.removeChild(node)-子节点列表中删除某个节点:</span></p>
+    <p>~replaceChild():<span>node.replaceChild(newnode,oldnode)-某个子节点替换为另一个</span></p>
+
+</div>
+<hr>
+<div class="proto">
+    <h3>4.Element</h3>
+    <p>~after():<span>同级节点之后<a href="https://developer.mozilla.org/en-US/docs/Web/API/ChildNode/after">https://developer.mozilla.org/en-US/docs/Web/API/ChildNode/after</a></span></p>
+    <p>~animate():<span><a href="https://developer.mozilla.org/en-US/docs/Web/API/ChildNode/after">https://developer.mozilla.org/en-US/docs/Web/API/ChildNode/after</a></span></p>
+    <p>~append():<span>父节点最后一个<a href="https://developer.mozilla.org/en-US/docs/Web/API/ParentNode/append">https://developer.mozilla.org/en-US/docs/Web/API/ParentNode/append</a></span></p>
+    <p>~attachShadow():<span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/attachShadow">https://developer.mozilla.org/en-US/docs/Web/API/Element/attachShadow</a></span></p>
+    <p>~before():<span>同级节点之前<a href="https://developer.mozilla.org/en-US/docs/Web/API/ChildNode/before">https://developer.mozilla.org/en-US/docs/Web/API/ChildNode/before</a></span></p>
+    <p>~closest():<span><a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Element/closest">https://developer.mozilla.org/zh-CN/docs/Web/API/Element/closest</a></span></p>
+    <p>~createShadowRoot():<span></span></p>
+    <p>~getAttribute():<span></span></p>
+    <p>~getAttributeNS():<span></span></p>
+    <p>~getAttributeNode():<span></span></p>
+    <p>~getAttributeNodeNs():<span></span></p>
+    <p>~getBoundingClientRect():<span></span></p>
+    <p>~getClientRects():<span></span></p>
+    <p>~getDestinationInsertionPoints():<span></span></p>
+    <p>~getElementsByClassName():<span></span></p>
+    <p>~getElementsByTagName():<span></span></p>
+    <p>~getElementsByTagNameNS():<span></span></p>
+    <p>~hasAttribute():<span></span></p>
+    <p>~hasAttributeNs():<span></span></p>
+    <p>~hasAttributes():<span></span></p>
+    <p>~hasPointerCapture():<span></span></p>
+    <p>~insertAdjacentElement():<span></span></p>
+    <p>~insertAdjacentHTML():<span></span></p>
+    <p>~insertAdjacentText():<span></span></p>
+    <p>~prepend():<span></span></p>
+    <p>~querySelector():<span></span></p>
+    <p>~querySelectorAll():<span></span></p>
+    <p>~releasePointerCapture():<span></span></p>
+    <p>~remove():<span></span></p>
+    <p>~removeAttribute():<span></span></p>
+    <p>~removeAttributeNs():<span></span></p>
+    <p>~removeAttributeNode():<span></span></p>
+    <p>~replaceWith():<span></span></p>
+    <p>~requestPointerLock():<span></span></p>
+    <p>~scrollIntoView():<span></span></p>
+    <p>~scrollIntoViewIfNeeded():<span></span></p>
+    <p>~setAttribute():<span></span></p>
+    <p>~setAttributeNS():<span></span></p>
+    <p>~setAttributeNode():<span></span></p>
+    <p>~setAttributeNodeNs():<span></span></p>
+    <p>~setPointerCapture():<span></span></p>
+    <p>~webkitMatchesSelector():<span></span></p>
+    <p>~webkitRequestFullScreen():<span></span></p>
+</div>
+<hr>
+<div class="proto">
+    <h3>5.HtmlElement</h3>
+    <p>~blur():<span></span></p>
+    <p>~focus():<span></span></p>
+</div>
+<div class="proto">
+    <h3>6.HtmlDivElement</h3>
+</div>
+<div class="proto">
+    <h3>7.Div</h3>
+</div>
+<hr><hr><hr>
+<h1>=====a=====</h1>
+<div class="proto">
+    <h3>1.Object</h3>
+</div>
+<div class="proto">
+    <h3>2.HTMLANchorElement</h3>
+</div>
+<div class="proto">
+    <h3>3.HTMLANchorElement</h3>
+</div>
+<div class="proto">
+    <h3>4.HTMLANchorElement</h3>
+</div>
+<div class="proto">
+    <h3>5.HtmlElement</h3>
+    <p>~blur():<span></span></p>
+    <p>~focus():<span></span></p>
+</div>
+<div class="proto">
+    <h3>6.HTMLANchorElement</h3>
+</div>
+<div class="proto">
+    <h3>7.a</h3>
+</div>
+<hr><hr><hr>
+<h1>=====document=====</h1>
+<div class="proto">
+    <h3>1.Object</h3>
+</div>
+<div class="proto">
+    <h3>2.EventTarget</h3>
+</div>
+<div class="proto">
+    <h3>3.Node</h3>
+</div>
+<div class="proto">
+    <h3>4.Document</h3>
+    <p>~adoptNode():<span><a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Document/adoptNode">https://developer.mozilla.org/zh-CN/docs/Web/API/Document/adoptNode</a></span></p>
+    <p>~append():<span></span></p>
+    <p>~creatRangeFromPoint():<span><a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Document/caretRangeFromPoint">https://developer.mozilla.org/zh-CN/docs/Web/API/Document/caretRangeFromPoint</a></span></p>
+    <p>~createAttribute():<span></span></p>
+    <p>~createAttributeNS():<span></span></p>
+    <p>~createCDATASection():<span></span></p>
+    <p>~createComment():<span></span></p>
+    <p>~createDocumentFragment():<span></span></p>
+    <p>~createElement():<span></span></p>
+    <p>~createEvent():<span></span></p>
+    <p>~createExpression():<span></span></p>
+    <p>~createNSResolver():<span></span></p>
+    <p>~createProcessingInstruction():<span></span></p>
+    <p>~createRange():<span></span></p>
+    <p>~createTextNode():<span></span></p>
+    <p>~createTreeWalker():<span></span></p>
+    <p>~elementFromPoint():<span></span></p>
+    <p>~elementsFromPoint():<span></span></p>
+    <p>~evaluate():<span></span></p>
+    <p>~exitPointerLock():<span></span></p>
+    <p>~getElementById():<span></span></p>
+    <p>~getElementsByClassName():<span></span></p>
+    <p>~getElementsByTagName():<span></span></p>
+    <p>~getElementsByTagNameNs():<span></span></p>
+    <p>~getSelection():<span></span></p>
+    <p>~hasFocus():<span></span></p>
+    <p>~importNode():<span></span></p>
+    <p>~queryCommandEnabled():<span></span></p>
+    <p>~queryCommandIndeterm():<span></span></p>
+    <p>~queryCommandState():<span></span></p>
+    <p>~queryCommandSupported():<span></span></p>
+    <p>~queryCommandValue():<span></span></p>
+    <p>~querySelector():<span></span></p>
+    <p>~querySelectorAll():<span></span></p>
+    <p>~registerElement():<span></span></p>
+    <p>~webkitCancelFullScreen():<span></span></p>
+    <p>~webkitExitFullScreen():<span></span></p>
+</div>
+<div class="proto">
+    <h3>5.HTMLDocument</h3>
+    <p>~captureEvents():<span></span></p>
+    <p>~releaseEvents():<span></span></p>
+</div>
+<div class="proto">
+    <h3>6.document</h3>
+</div>
+<hr><hr><hr>
+<h1>=====window=====</h1>
+<div class="proto">
+    <h3>1.Object</h3>
+</div>
+<div class="proto">
+    <h3>2.EventTarget</h3>
+</div>
+<div class="proto">
+    <h3>3.WindowProperties</h3>
+</div>
+<div class="proto">
+    <h3>4.Window</h3>
+    <p>~alert()<span></span></p>
+    <p>~applicatinoCache<span></span></p>
+    <p>~atob()<span></span></p>
+    <p>~blur()<span></span></p>
+    <p>~btoa()<span></span></p>
+    <p>~caches<span></span></p>
+    <p>~cancelAnimatinoFrame()<span></span></p>
+    <p>~cancelIdleCallback()<span></span></p>
+    <p>~captureEvents()<span></span></p>
+    <p>~clearInterval()<span></span></p>
+    <p>~cleatTimerout()<span></span></p>
+    <p>~clientInformation()<span></span></p>
+    <p>~close()<span></span></p>
+    <p>~confirm()<span></span></p>
+    <p>~console()<span></span></p>
+    <p>~createImageBitmap()<span></span></p>
+    <p>~crypto<span></span></p>
+    <p>~customElements<span></span></p>
+    <p>~document<span></span></p>
+    <p>~external<span></span></p>
+    <p>~fetch()<span></span></p>
+    <p>~find()<span></span></p>
+    <p>~focus()<span></span></p>
+    <p>~frames<span></span></p>
+    <p>~getComputedStyle()<span></span></p>
+    <p>~getMatchedCssRules()<span></span></p>
+    <p>~getSelection()<span></span></p>
+    <p>~history<span></span></p>
+    <p>~indexedDB<span></span></p>
+    <p>~localStorage<span></span></p>
+    <p>~location<span></span></p>
+    <p>~locationbar<span></span></p>
+    <p>~matchMedia()<span></span></p>
+    <p>~menubar<span></span></p>
+    <p>~moveBy()<span></span></p>
+    <p>~moveTo()<span></span></p>
+    <p>~navigator<span></span></p>
+    <p>~onload()<span></span></p>
+    <p>~opean()<span></span></p>
+    <p>~parent<span></span></p>
+    <p>~performance<span></span></p>
+    <p>~personalbar<span></span></p>
+    <p>~postMessage()<span></span></p>
+    <p>~print()<span></span></p>
+    <p>~prompt()<span></span></p>
+    <p>~releaseEvents()<span></span></p>
+    <p>~requestAnimationFrame()<span></span></p>
+    <p>~requestIdleCallback()<span></span></p>
+    <p>~resizeBy()<span></span></p>
+    <p>~resizeTo()<span></span></p>
+    <p>~screen<span></span></p>
+    <p>~scroll()<span></span></p>
+    <p>~scrollBy()<span></span></p>
+    <p>~scrollTo()<span></span></p>
+    <p>~scrollbars<span></span></p>
+    <p>~self<span></span></p>
+    <p>~sessionStorage<span></span></p>
+    <p>~setInterval()<span></span></p>
+    <p>~setIimeout()<span></span></p>
+    <p>~showModalDialog()<span></span></p>
+    <p>~speechSynthesis<span></span></p>
+    <p>~statusbar<span></span></p>
+    <p>~stop()<span></span></p>
+    <p>~styleMedia<span></span></p>
+    <p>~toolbar<span></span></p>
+    <p>~top<span></span></p>
+    <p>~webkitCancelAnimatinoFrame()<span></span></p>
+    <p>~webkitCancelRequestAnimatinoFrame()<span></span></p>
+    <p>~webkitIndexeDB()<span></span></p>
+    <p>~webkitRequestAnimatinoFrame()<span></span></p>
+    <p>~webkitRequestFileSystem()<span></span></p>
+    <p>~webkitResolveLocalFileSystemURL()<span></span></p>
+    <p>~webkitStorageInfo()<span></span></p>
+    <p>~window<span></span></p>
+</div>
+</body>
+</html>

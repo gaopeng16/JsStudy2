@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    //===1.typeof 用来检测数据类型的运算符===
+    //-->使用typeof检测数据类型，首先返回的都是一个字符串，其次字符串中包含了对应的数据类型例如："number","string","boolean","undefined","function","object"
+    //局限性：
+    // typeof null ->"object";
+    // 不能具体的细分是数组还是正则，还是对象中其他的值，因为使用typeof检测数据类型，对于对象数据类型中的左右的值，最后返回的结果都是"object";
+
+    //===2.instanceof 检测某一个实例是否属于某个类===
+    var obj = [12, 13];
+    //console.log(obj instanceof Array);
+    //console.log(obj instanceof RegExp);
+    //局限性：好多
+    // 1.不能用来检测和处理字面量方式创建出来的节本数据类型值
+    //->对于基本类型来说，字面量方式创建出来的结果和实例方式创建出来的结果是有一定的区别的，从严格意义上来讲，只有实例创建出来的结果才是标准的对象数据类型，也是表针的Number这个类的一个实例，对于字面量方式创建出来的结果是基本数据类型值，不是严谨的实例，但是由于JS的松散特点，导致了可以使用Number.prototype上提供的方法；
+    //console.log(1 instanceof Number);//->false
+    //console.log(true instanceof Boolean);//->false
+    //console.log(new Number(1) instanceof Number);//true;
+    //2. instanceof的特性：只要在当前实例的原型链上，我们用其检测出来的结果都是true
+    //在原型链继承中，我们最后检测出来的结果未必准确
+    var ary = [];
+    //console.log(ary instanceof Array);//true;
+    //console.log(ary instanceof Object);//true;
+
+    function Fn() {
+    }
+
+    Fn.prototype = new Array();
+    var f = new Fn();//f 并不是数组，但f instanceof Array ->true;
+    //console.log(f instanceof Array);//true
+
+    //===3.constructor 构造函数===
+    //作用和instanceof非常的相似
+    var obj = [];
+    //console.log(obj.constructor === Array);//true
+    //console.log(obj.constructor === RegExp);//false
+    //可以处理基本数据类型的检测
+    var num = 1;
+    //console.log(num.constructor === Number);//true
+    //检测Object和instanceof不一样，一般情况下是检测不了的
+    var reg = /^s/;
+    //console.log(reg.constructor === RegExp);//true 私有的存在，就不在往上走了，所以下面的是false
+    //console.log(reg.constructor === Object);//false
+    //局限性，我们可以把类的原型进行重写，在重写的过程中很有可能把初夏你之前的constructor覆盖了，这样检测出来的结果就不准确了
+
+    //对于特殊的数据类型(null、undefined)，他们的所属类是Null和undefined，但是浏览器吧这两个类保护起来，不允许在外面访问
+
+    //===4.Object.prototype.toString.call() 最准确最常用的方式
+    var ary = [];
+    console.log(Object.prototype.toString.call(ary));//[object Array]
+    console.log(Object.prototype.toString.call(/^$/));//[object RegExp]
+    console.log({}.toString.call(1));//[object Number]
+    console.log(Object.prototype.toString.call(true));//[object Boolean]
+    console.log(Object.prototype.toString.call(null));//[object null]
+    console.log(Object.prototype.toString.call(undefined));//[object undefined]
+    console.log(Object.prototype.toString.call(function () {
+    }));//[object Function]
+
+    var reg = /^\[object Array\]$/;
+    console.log(reg.test(Object.prototype.toString.call(ary)));
+
+    //5,toString的理解；
+    //对于Number、String、boolean、Array、RegExp、Date、Function原型上的toString都是转为字符串，但是Object原型上的toString并不是用来转化为字符串的，而是返回当前方法执行主体(方法中this)所属类的详细信息,利用这一特点，可以来检测数据类型，如上4
+    //Number原型上的toString()方法不仅仅可以把数字转换成字符串还可以]
+    //console.log((128).toString(2/8/10))转成2进制，8进制10进制
+    //null和undefined没有toString
+
+
+
+
+</script>
+</body>
+</html>

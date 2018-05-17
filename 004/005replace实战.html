@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    /**
+     * 1.将小写的数字替换成大写的中文数字
+     */
+    var str = "20180330";
+    var ary = ["零", "壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖"];
+    str = str.replace(/\d/g, function () {
+        return ary[arguments[0]]
+    });
+    console.log(str);
+
+    /**
+     * 2.捕获一个字符串中出现次数最多的字符,并且获取出现的次数
+     */
+    var str2 = "wozhengzainvlidexuexijs";
+    //a.获取每一个字符出现的次数
+    var obj = {};
+    str2.replace(/[a-z]/gi, function () {
+        obj[arguments[0]] >= 1 ? obj[arguments[0]] += 1 : obj[arguments[0]] = 1;
+    });
+    console.log(obj);
+    //b.假设法获取最多出现的次数
+    var maxNum = 0;
+    for (var key in obj) {
+        obj[key] > maxNum ? maxNum = obj[key] : null;
+    }
+    console.log(maxNum);
+    //c.把所有符合maxNum次数的都获取到
+    var ary2 = [];
+    for (var key in obj) {
+        obj[key] === maxNum ? ary2.push(key) : null;
+    }
+    console.log(ary2.toString());
+
+    /**
+     * 3.模板引擎实现的初步原理
+     */
+    var str3 = "my name is {0},my age is {1},i come from {2},i love {3}~";
+    var ary3 = ['张三', 18, 'china', 'javascript'];
+    str3 = str3.replace(/{(\d+)}/g, function () {
+        return ary3[arguments[1]];
+        //return ary3[RegExp.$1];
+    });
+    console.log(str3);
+
+    /**
+     * 4.queryURLParameter
+     */
+    var str4 = "http://localhost:63342/js2/004/005replace.html?_ijt=123&cid=1324659&app=1.0";
+    var reg = /([^?=&]+)=([^?=&]+)/g;
+    var obj4 = {};
+    str4.replace(reg, function () {
+        obj4[arguments[1]] = arguments[2];
+    });
+    console.log(obj4);
+
+
+    new Array(10000).fill('')
+        .map((_, index) => index + 1)
+    .filter(item => /0/.test(item))
+    .reduce((count, item) => { return count + (String(item).match(/0/g) || []).length}, 0)
+
+
+</script>
+</body>
+</html>

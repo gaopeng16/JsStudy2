@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        #box {
+            width: 200px;
+            height: 200px;
+            border: solid 10px #abcdef;
+            padding: 30px;
+            margin: 100px;
+        }
+    </style>
+</head>
+<body>
+<div id="box" class="test test1 test2">
+    要想得到你必须要付出，要付出还要学会坚持，如果你觉得真的很难，那你就放弃，但是一旦放弃就不要抱怨，我觉得人生就是这样，世界真的是平平衡的，每个人都是通过自己的努力，去决定自己生活的样子！
+    要想得到你必须要付出，要付出还要学会坚持，如果你觉得真的很难，那你就放弃，但是一旦放弃就不要抱怨，我觉得人生就是这样，世界真的是平平衡的，每个人都是通过自己的努力，去决定自己生活的样子！
+</div>
+<script src="../utils.js"></script>
+<script>
+    var box = document.getElementById('box');
+    /**
+     * 获取元素的某一个具体的属性值
+     * box.style.height->获取的行内样式(不合适)
+     * 使用window.getComputerStyle(当前要操作的元素对象，当前元素的伪类)；
+     */
+    console.log(window.getComputedStyle(box, null)["height"]);
+
+    function getCss(curEle, attr) {
+        //1.try catch处理兼容
+        /*try {//try catch处理兼容(消耗性能)->无论如何都要执行try内的代码
+            return window.getComputedStyle(curEle, null)[attr];
+        } catch (e) {
+            return curEle.currentStyle[attr];//兼容ie6、7、8
+        }*/
+
+        //1.通过判断浏览器中是否存在这个属性或者方法
+        /*if (window.getComputedStyle) {
+            return window.getComputedStyle(curEle, null)[attr];
+        } else {
+            return curEle.currentStyle[attr];
+        }*/
+
+        //1.try catch处理兼容类型或版本号
+        if (/MSIE (6|7|8)/.test(navigator.userAgent)) {
+            return curEle.currentStyle[attr];
+        } else {
+            return window.getComputedStyle(curEle, null)[attr];
+        }
+    }
+
+    var borwser = utils.getBoroserInfo();
+    var verinfo = (borwser + "").replace(/[^0-9.]/ig, "");
+
+    //判断浏览器版本和类型来处理兼容
+    //window.navigator.userAgent
+
+</script>
+</body>
+</html>

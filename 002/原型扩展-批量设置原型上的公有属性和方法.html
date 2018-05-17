@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>批量设置原型上的公有属性和方法</title>
+    <script>
+        window.onload = function () {
+
+            // function Fn() {
+            //     this.x = 100;
+            // }
+            // //1.起一个别名
+            // var pro = Fn.prototype;
+            // pro.getX = function () {
+            //
+            // }
+
+            /**
+             * 重构原型对象的方式->自己新开辟一个堆内存，存储我们公有的属性和方法，
+             * 把浏览器原来给的Fn.prototype开辟的那个替换掉
+             * @constructor
+             */
+            function Fn() {
+                this.x = 100;
+            }
+
+            Fn.prototype = {
+                constructor: Fn,
+                a: function () {
+
+                },
+                b: function () {
+
+                },
+                c: function () {
+
+                }
+            };
+            /**
+             * 1.只有浏览器天生给Fn.prototype开辟的堆内存里面才有constructor，
+             * 而我们重构的这个堆内存没有这个属性，这样constructor指向就不再是Fn而是Object了
+             * 为了和原来的保存一致，我们需要手动的增加constructor指向
+             *
+             * 2.用这种方式给内置类增加公有的属性,浏览器是给你屏蔽掉的
+             * 但是我们可以一个个的修改内置的方法，例如下述方式
+             */
+            Array.prototype.sort = function () {
+                //此方法名和原来内置的重复了，会把内置的修改掉
+                console.log('ok');
+            };
+
+            //扩展方法数组去重
+            Array.prototype.myUnique = function () {
+                var obj = {};
+                for (var i = 0; i < this.length; i++) {
+                    var cur = this[i];
+                    if (obj[cur] == cur) {
+                        this[i] = this[this.length - 1];
+                        this.length--;
+                        i--;
+                        continue;
+                    }
+                    obj[cur] = cur;
+                }
+                obj = null;
+                return this;
+            };
+            var arr = [12, 34, 45, 52, 12, 45, 67];
+            /**
+             * 链式写法原理：
+             *  sort执行完成返回值是一个 “数组”
+             *  reverse执行完成的返回值是一个 "数组"
+             *  pop返回值是删除的那个元素
+             */
+            arr.sort(function (a, b) {
+                a - b
+            }).reverse().pop()
+        }
+    </script>
+</head>
+<body>
+
+</body>
+</html>

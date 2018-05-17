@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no initial-scale=1.0 maximum-scale=1.0 minimum-scale=1.0">
+
+    <!--
+        忽略数字自动识别为电话号码 针对 IOS Safari
+        (防止那些看起来像电话号码的，点击拨号)
+        开启拨打电话/发送短信功能
+        <a href="tel:123456"></a>
+        <a href="sms:123456"></a>
+    -->
+    <meta name="format-detection" content="telephone=no,email=no">
+    <!-- WebApp全屏模式
+        当我们讲一个网页添加到主屏幕时，会更希望它能有想App一样的表现，没有地址栏和状态栏全屏显示
+     -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
+    <!-- 设置状态栏颜色 -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <!-- 添加到主屏幕后的图标 -->
+    <link href="图片的地址" sizes="114x114" rel="apple-touch-icon-precomposes">
+    <!-- 添加到主屏幕后的标题  -->
+    <meta name="apple-mobile-app-title" content="标题">
+
+    <!-- 无缓存 -->
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="max-age=0">
+
+    <title>Title</title>
+    <link rel="stylesheet" href="../../../../[JavaScript]---2016 新版zhu峰js/2016新版/index.css">
+</head>
+<body>
+<a href="tel:123456"></a>
+<a href="sms:123456"></a>
+<a href="mailto:123456@qq.com"></a>
+</body>
+</html>

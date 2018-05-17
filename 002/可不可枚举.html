@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        window.onload = function () {
+            Object.prototype.aaa = function () {
+
+            };
+
+            var obj = {name: '张三', age: 12};
+            /**
+             * 私有的属性可以枚举，公有的不可以，在遍历的时候，私有的属性(可枚举)可以
+             * 遍历出来，但是公有的（不可枚举的），自己定义的也能遍历出来
+             *
+             * for in 循环在遍历的时候，默认可以把自己私有的和在它所属类原型上扩展的属性
+             * 和方法都可以遍历到，但是一般情况下，我们只需要遍历私有的即可，我们可以使用
+             * propertyIsEnumberable进行处理
+             */
+            for (var key in obj) {
+                // if (obj.propertyIsEnumerable(key)) {
+                //     console.log(key);
+                // }
+                //上下两种方法效果一样
+                if (obj.hasOwnProperty(key)) {
+                    console.log(key);
+                }
+            }
+
+        }
+    </script>
+</head>
+<body>
+
+</body>
+</html>

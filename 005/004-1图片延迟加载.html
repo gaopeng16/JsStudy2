@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>图片延迟加载/图片懒加载</title>
+    <style>
+        #banner {
+            margin-top: 2000px;
+            margin-bottom: 1000px;
+            border: solid 1px #bacdef;
+            width: 500px;
+            height: 312px;
+        }
+
+        #banner img {
+            width: 100%;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<!--
+ 作用：保证页面打开的速度
+ 原理：
+ 1)对于首屏内容中的图片：首先给对应的区域一张默认图片占着位置(默认图需要非常的小，一般可以维持在5kb以内)，当首屏内容加载完成后(或者给一个延迟时间)，我们再开始加载真是图片。
+ 2)对于其他屏中的图片，也是给一张默认的图片占位，当滚动条滚动到对应区域额时候，我们再开始加载真是的图片
+ 扩展：数据的异步加载，开始只把前两屏的数据加载绑定出来，后面的数据不进行处理，当页面滚动到对应区域的时候再从新请求数据然后绑定渲染数据
+-->
+<div id="banner">
+    <img src="" trueImg="img/01.jpg">
+</div>
+<script src="../utils.js"></script>
+<script>
+    var banner = document.getElementById('banner');
+    var imgFir = banner.getElementsByTagName('img')[0];
+
+    window.onscroll = function () {
+
+        if (banner.isLoad) {
+            return;
+        }
+
+        var A = banner.offsetHeight + utils.offset(banner).top;
+        var B = utils.win("clientHeight") + utils.win("scrollTop");
+        if (A < B) {
+            //当第一次加载完成后，我们再让要页面继续滚动的过程中，A<B恒成立，会重复加载图片
+            var oImg = new Image();
+            oImg.src = imgFir.getAttribute('trueImg');
+            oImg.onload = function () {
+                console.log('ok');
+                imgFir.src = this.src;
+                imgFir.style.display = "block";
+                oImg = null;
+            };
+            //设置自定义属性，告诉浏览器已经加载了(不管是否正常加载，只要处理过一次就不在处理)
+            banner.isLoad = true;
+        }
+    };
+
+</script>
+</body>
+</html>

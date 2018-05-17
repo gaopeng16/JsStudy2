@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="public.css">
+</head>
+<body>
+<div class="box">
+    <h2>
+        <span>编号</span>
+        <span>姓名</span>
+        <span>性别</span>
+        <span>分数</span>
+    </h2>
+    <ul class="con" id="content">
+        <!--<li>
+            <span>1</span>
+            <span>张三</span>
+            <span>男</span>
+            <span>90</span>
+        </li>-->
+    </ul>
+    <div class="page" id="page">
+        <span>FIRST</span>
+        <span>PREV</span>
+        <ul class="pageNum" id="pageNum">
+            <!--<li>1</li>-->
+        </ul>
+        <span>NEXT</span>
+        <span>LAST</span>
+        <input type="text" id="numInp" value="1">
+    </div>
+</div>
+<script src="ajax.js"></script>
+<script>
+    var pageModule = (function () {
+        var content = document.getElementById('content'),
+            page = document.getElementById('page'),
+            pageNum = document.getElementById('pageNum'),
+            numInp = document.getElementById('numInp');
+        var n = 1, total = 0, data = null;
+
+        function bindHTML() {
+            var str = '';
+            for (var i = 0; i < data.length; i++) {
+                var curData = data[i];
+                str += '<li id="' + curData["id"] + '">';
+                str += '<span>' + curData["id"] + '</span>';
+                str += '<span>' + curData["name"] + '</span>';
+                str += '<span>' + (curData["sex"] == 1 ? "女" : "男") + '</span>';
+                str += '<span>' + curData["score"] + '</span>';
+                str += '</li>';
+            }
+            content.innerHTML = str;
+
+            str = '';
+            for (var i = 1; i <= total; i++) {
+                i === n ? str += '<li class="bg">' + i + '</li>' : str += '<li>' + i + '</li>';
+            }
+            pageNum.innerHTML = str;
+
+            numInp.value = n;
+
+        }
+
+        function bindEvent() {
+            page.onclick = function (e) {
+                var e = e || event,
+                    tar = e.target || e.srcElement,
+                    tarName = tar.tagName.toUpperCase(),
+                    tarInn = tar.innerHTML;
+                if (tarName === "SPAN") {
+                    if (tarInn === "FIRST") {
+                        if (n === 1) return;
+                        n = 1;
+                    }
+                    if (tarInn === "LAST") {
+                        if (n === total) return;
+                        n = total;
+                    }
+                    if (tarInn === "PREV") {
+                        if (n === 1) return;
+                        n--;
+                    }
+                    if (tarInn === "NEXT") {
+                        if (n === total) return;
+                        n++;
+                    }
+                }
+                if (tarName === "LI") {
+                    if (n === parseFloat(tarInn)) return;
+                    n = parseFloat(tarInn);
+                }
+                if (tarName === "INPUT") {
+                    return;
+                }
+
+                sendAJAX();
+
+            };
+
+            numInp.onkeyup = function (ev) {
+                var e = ev || event;
+                if (e.keyCode === 13) {
+                    var val = parseFloat(this.value.replace(/^ +| +$/, ""));
+                    if (isNaN(val)) {
+                        this.value = n;
+                        return;
+                    }
+                    val = Math.round(val);
+                    if (val < 1) {
+                        n = 1;
+                    } else if (val > total) {
+                        n = total;
+                    } else {
+                        n = val;
+                    }
+                    sendAJAX();
+                }
+            }
+        }
+
+        function bindLink() {
+            var oLis = content.getElementsByTagName("li");
+            for (var i = 0; i < oLis.length; i++) {
+                oLis[i].onclick = function () {
+                    window.open("detail.html?id=" + this.getAttribute("id"));
+                }
+            }
+        }
+
+        function sendAJAX() {
+            ajax({
+                url: "/getList?n=" + n,
+                success: function (jsonData) {
+                    if (jsonData && jsonData.code == 0) {
+                        total = jsonData["total"];
+                        data = jsonData["data"];
+                        bindHTML();
+                        bindLink();
+                    }
+                }
+            })
+        }
+
+        function init() {
+            sendAJAX();
+            bindEvent();
+        }
+
+        return {
+            init: init
+        }
+    })();
+    pageModule.init();
+</script>
+</body>
+</html>

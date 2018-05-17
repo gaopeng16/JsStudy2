@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../utils.js"></script>
+</head>
+<body>
+<script>
+    window.onload = function () {
+        var oUl = document.getElementById('ul');
+        var aLi = oUl.getElementsByTagName('li');
+
+        //1.把类数组转换为数组
+        var ary = utils.listToArray(aLi);
+        //2.给数组进行排序
+        ary.sort(function (a, b) {
+            return parseFloat(a.innerHTML) - parseFloat(b.innerHTML);
+        });
+        //3.按照ary中存储的最新书序一次把对应的li添加到页面中
+        var frg = document.createDocumentFragment();
+        for (var i = 0; i < ary.length; i++) {
+            frg.appendChild(ary[i]);
+        }
+        //ps:按说，向最后添加，结果应该是10个li，但是最后就只是原来的5个，因为后插入的每一个，都与原来的映射
+        //原因是因为dom的映射机制
+        oUl.appendChild(frg);
+        frg = null;
+
+        /**
+         * dom映射机制：页面中的标签和js中获取到的元素对象或者元素集合是紧密的绑定在一起的，页面中的html结构改变了，js中不需要重新获取，集合里的内容也会跟着自动改变
+         */
+    }
+</script>
+<ul id="ul">
+    <li>10</li>
+    <li>8</li>
+    <li>23</li>
+    <li>12</li>
+    <li>20</li>
+</ul>
+</body>
+</html>

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        #box1 {
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            background: red;
+        }
+
+        #box2 {
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            background: blue;
+            left: 200px;
+            top: 100px;
+        }
+
+        #box3 {
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            background: green;
+            left: 100px;
+            top: 200px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="box1"></div>
+<div id="box2"></div>
+<div id="box3"></div>
+<script src="../event.js"></script>
+<script>
+
+    function EventEimter() {
+
+    }
+
+    EventEimter.prototype.on = function (type, fn) {
+        if (!this[type]) {
+             this[type] = [];
+         }
+         var ary = this[type];
+         for (var i = 0; i < ary.length; i++) {
+             if (ary[i] === fn) return;
+         }
+         ary.push(fn);
+
+    };
+    EventEimter.prototype.fire = function (obj, type, e) {
+        var ary = this[type];
+        if (ary && ary.length) {
+            for (var i = 0; i < ary.length;) {
+                if (typeof ary[i] === "function") {
+                    ary[i].call(obj, e);
+                    i++;
+                } else {
+                    ary[i].splice(i, 1);
+                }
+            }
+        }
+    };
+    EventEimter.prototype.off = function (type, fn) {
+        var ary = this[type];
+        for (var i = 0; i < ary.length; i++) {
+            if (ary[i] === fn) {
+                ary[i] = null;
+                return;
+            }
+        }
+    };
+    EventEimter.prototype.run = function (e) {
+        //ie6~8下绑定的run方法
+        var e = window.event;
+        var ary = this["aEvent" + e.type];
+        e.target = e.srcElement;
+        e.stopPropagation = function () {
+            e.cancelBubble = true;
+        };
+        e.preventDefault = function () {
+            e.returnValue = false;
+        };
+        e.pageX = e.clientX + (document.documentElement.scrollLeft || document.body.scrollLeft);
+        e.pageY = e.clientY + (document.documentElement.scrollTop || document.body.scrollTop);
+
+        for (var i = 0; i < ary.length;) {
+            if (typeof ary[i] === "function") {
+                ary[i].call(this, e);
+                i++;
+            } else {
+                ary.splice(i, 1);
+            }
+        }
+    };
+
+    function Drag(ele) {
+        this.x = null;
+        this.y = null;
+        this.mx = null;
+        this.my = null;
+        this.ele = ele;
+        this.DOWN = gpEvent.processThis(this, this.down);
+        this.MOVE = gpEvent.processThis(this, this.move);
+        this.UP = gpEvent.processThis(this, this.up);
+
+        gpEvent.on(this.ele, "mousedown", this.DOWN)
+    }
+
+    Drag.prototype = new EventEimter();
+    Drag.prototype.down = function (e) {
+
+        this.disX = e.pageX - this.ele.offsetLeft;
+        this.disY = e.pageY - this.ele.offsetTop;
+
+        if (this.ele.setCapture) {
+            this.ele.setCapture();
+            gpEvent.on(this.ele, "mousemove", this.MOVE);
+            gpEvent.on(this.ele, "mouseup", this.UP);
+        } else {
+            gpEvent.on(document, "mousemove", this.MOVE);
+            gpEvent.on(document, "mouseup", this.UP);
+        }
+        e.preventDefault();
+        this.fire(this.ele, "dragStart", e);
+    };
+    Drag.prototype.move = function (e) {
+
+        this.ele.style.left = e.pageX - this.disX + "px";
+        this.ele.style.top = e.pageY - this.disY + "px";
+
+        this.fire(this.ele, "dragMove", e);
+    };
+    Drag.prototype.up = function () {
+        if (this.ele.releaseCapture) {
+            this.ele.releaseCapture();
+            gpEvent.off(this.ele, "mousemove", this.MOVE);
+            gpEvent.off(this.ele, "mouseup", this.UP);
+        } else {
+            gpEvent.off(document, "mousemove", this.MOVE);
+            gpEvent.off(document, "mouseup", this.UP);
+        }
+        this.fire(this.ele, "dragEnd");
+    };
+
+    var zIndex = 1;
+
+    function increaseZIndex() {
+        this.style.zIndex = ++zIndex;
+    }
+
+    function clearEffect() {
+        window.clearInterval(this.flyTimer);
+        window.clearInterval(this.dropTimer);
+    }
+
+    function fly() {
+        window.clearInterval(this.flyTimer);
+        var _this = this;
+        this.flyTimer = window.setInterval(function () {
+
+            if (Math.abs(_this.speedX) < 0.5) {
+                window.clearInterval(_this.flyTimer);
+                return;
+            }
+
+            _this.speedX *= 0.93;
+            var curL = _this.offsetLeft + _this.speedX;//如果_this.speedX的值小于0.5，下次再获取_this.offsetLeft时，就四舍五入了，相当于没有加上
+            var minL = 0,
+                maxL = (document.documentElement.clientWidth || document.body.clientWidth) - _this.offsetWidth;
+            if (curL >= maxL) {
+                _this.style.left = maxL + 'px';
+                _this.speedX *= -1;
+            } else if (curL <= minL) {
+                _this.style.left = minL + 'px';
+                _this.speedX *= -1;
+            } else {
+                _this.style.left = curL + 'px';
+            }
+        }, 30);
+    }
+
+    function drop() {
+        window.clearInterval(this.dropTimer);
+        var _this = this;
+        this.dragFlag = 0;
+        this.dropTimer = window.setInterval(function () {
+
+            if (_this.dragFlag > 1) {
+                window.clearInterval(_this.speedY);
+            }
+
+            !_this.speedY ? _this.speedY = 9.8 : _this.speedY += 9.8;
+            _this.speedY *= 0.98;
+            var curT = _this.offsetTop + _this.speedY;
+            var maxT = (document.documentElement.clientHeight || document.body.clientHeight) - _this.offsetHeight;
+            if (curT >= maxT) {
+                _this.style.top = maxT + "px";
+                _this.speedY *= -1;
+                _this.dragFlag++;//落到最底了，就累加
+            } else {
+                _this.style.top = curT + "px";
+                _this.dragFlag = 0;//要是反弹了，让_this.dragFlag的值为0
+            }
+        }, 30);
+    }
+
+    function getSpeed() {
+        if (!this.pre) {
+            this.pre = this.offsetLeft;
+        } else {
+            this.speedX = this.offsetLeft - this.pre;
+            this.pre = this.offsetLeft;
+        }
+    }
+
+    var eles = document.getElementsByTagName("div");
+    var obj1 = new Drag(eles[0]);
+    console.log(obj1);
+    obj1.on("dragStart", increaseZIndex);
+    obj1.on("dragStart", clearEffect);
+    obj1.on("dragMove", getSpeed);
+    obj1.on("dragEnd", drop);
+    obj1.on("dragEnd", fly);
+    var obj2 = new Drag(eles[1]);
+    obj2.on("dragStart", increaseZIndex);
+    obj2.on("dragStart", clearEffect);
+    obj2.on("dragMove", getSpeed);
+    obj2.on("dragEnd", drop);
+    obj2.on("dragEnd", fly);
+
+    function Kettle() {
+
+    }
+
+    Kettle.prototype = new EventEimter();
+    Kettle.prototype.boiling = function () {
+        console.log("水烧开了");
+        this.fire(null, "myBoiling");
+    };
+
+    function washFace() {
+        console.log("我要洗脸");
+    }
+
+    var Kettle1 = new Kettle();
+    Kettle1.on("myBoiling", washFace);
+    Kettle1.boiling();
+
+</script>
+</body>
+</html>

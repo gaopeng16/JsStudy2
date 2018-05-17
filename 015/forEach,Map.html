@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    //forEach/map ie6~8不兼容
+    Array.prototype.myForeach = function myForeach(callback, context) {
+        context = context || window;
+        if ("forEach" in Array.prototype) {
+            this.forEach(callback, context);
+            return;
+        }
+        for (var i = 0, len = this.length; i < len; i++) {
+            callback && callback.call(context, this[i], i, this);
+        }
+    };
+
+    Array.prototype.myMap = function myForeach(callback, context) {
+        context = context || window;
+        if ("map" in Array.prototype) {
+            return this.map(callback, context);
+
+        }
+        var newAry = [];
+        for (var i = 0, len = this.length; i < len; i++) {
+            if (typeof callback === "function") {
+                var val = callback.call(context, this[i], i, this);
+                newAry[newAry.length] = val;
+            }
+        }
+        return newAry;
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        /**
+         * 看当前函数是在哪个作用域下定义的，那么他的上级作用域就是谁
+         * 和函数在哪执行的没有任何关系
+         * @type {number}
+         */
+        var num = 12;
+
+        function fn() {
+            var num = 120;
+            return function () {
+                console.log(num);
+            }
+        }
+
+        var f = fn();
+        f();//120
+
+        ~function () {
+            var num = 1200;
+            f();//120
+        }();
+    </script>
+</head>
+<body>
+<img src="images/001.png" alt="">
+<img src="images/002.png" alt="">
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
+    <link rel="stylesheet" href="../swiper-4.2.2.min.css">
+    <style>
+        html {
+            font-size: 100px;
+        }
+
+        html, body {
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        .swiper-container {
+            height: 3rem;
+            overflow: hidden;
+        }
+
+        .swiper-slide {
+            height: 3rem;
+        }
+
+        .swiper-slide img {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+<div id="main">
+
+    <section class="swiper-container">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide" style="background: #abcdef;">
+                wiper-1
+                <img data-src="" alt="" class="swiper-lazy">
+                <div class="swiper-lazy-preloader"></div>
+            </div>
+            <div class="swiper-slide" style="background: #66afff;">
+                wiper-2
+                <img data-src="" alt="" class="swiper-lazy">
+                <div class="swiper-lazy-preloader"></div>
+            </div>
+            <div class="swiper-slide" style="background: #616161;">
+                wiper-3
+                <img data-src="" alt="" class="swiper-lazy">
+                <div class="swiper-lazy-preloader"></div>
+            </div>
+            <div class="swiper-slide" style="background: #ff6900;">
+                wiper-4
+                <img data-src="" alt="" class="swiper-lazy">
+                <div class="swiper-lazy-preloader"></div>
+            </div>
+        </div>
+        <div class="swiper-pagination"></div>
+
+    </section>
+</div>
+<script src="../swiper-4.2.2.min.js"></script>
+<script>
+    ~function () {
+        var disW = 640, winW = document.documentElement.clientWidth, ratio = winW / disW;
+        var oMian = document.getElementById('main');
+        if (winW > disW) {
+            oMian.style.width = disW + "px";
+            oMian.style.margin = "0 auto";
+            return;
+        }
+        document.documentElement.style.fontSize = ratio * 100 + "px";
+    }();
+
+    //初始化swiper
+    var swiper1 = new Swiper('.swiper-container', {
+        loop: true, /*无缝衔接滚动*/
+        effect : 'cube',
+        autoplay: {
+            delay: 1000,
+            stopOnLastSlide: true,
+            disableOnInteraction: false
+        },
+        pagination: {
+            el: '.swiper-pagination'
+            // type:'progressbar'
+        },
+        lazy:{
+            loadPrevNext: true
+        }
+
+    });
+
+</script>
+</body>
+</html>

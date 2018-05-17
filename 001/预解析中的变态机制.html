@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+
+        /**
+         * 1.预解释的时候，不管条件是否成立，都要把带有var的进行提前声明
+         * window的预解释：var nujm; ->window.num;
+         * in:  判断某个属性是否是某个对象的
+         */
+
+        //if (!('num' in window)) {
+        //    var num = 12;
+        //}
+        //console.log(num); //->undefined
+
+        /**
+         * 2.预解释的时候只预解释“="号左边的，右边的是值，不参与预解释
+         * 匿名函数之函数表达式
+         */
+        //fn();//-> fn is not a function
+        //var fn = function () {
+        //    console.log('ok');
+        //};
+        //fn();//->'ok
+
+        //fn();//->'ok
+        //function fn() {  //上下都能调用
+        //    console.log('ok');
+        //}
+        //fn();//->'ok
+
+        /**
+         * 3.自执行函数：定义和执行一起完成
+         * 执行函数定义的那个function在全局作用域下不ingin修改预解释，当代码执行到这个位置的时候
+         * 定义和执行就一起完成了
+         */
+        //(function (num) {})(100);
+        //~function (num) {}(100);
+        //+function (num) {}(100);
+        //-function (num) {}(100);
+        //!function (num) {}(100);
+
+        /**
+         * 4.函数体中return下面的代码虽然不执行，但是需要进行预解释
+         * return 后面的跟着的都是我们返回值，所以不进行预解释
+         */
+        //function fn() {
+        //    console.log(num);//->undefined
+        //    return function () {};
+        //    var num = 100;
+        //}
+        //fn();
+
+        /**
+         * 5.在预解释的时候，如果名字已经声明过了，不需要重新的声明，但是可以重新的赋值；
+         * 在js中，如果变量的名字和函数的名字重复，也算冲突
+         * 预解释：var fn; window.fn;    fn=xxxfff000  window.fn=xxxfff000
+         */
+        //var fn = 100;
+        //function fn() {
+        //    console.log('ok');
+        //}
+    </script>
+</head>
+<body>
+
+</body>
+</html>

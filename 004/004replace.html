@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    //replace把原有的字符替换成新的字符
+    //在不使用正则的情况下，每次执行只能替换一个字符
+    var str = "zhangsan2015zhangsan2016";
+    //str = str.replace("zhangsan","lisi");
+    //console.log(str);
+
+    //str = str.replace(/zhangsan/g,"lisi");
+    //console.log(str);
+    /**
+     * replace第一项的值是一个正则的实现原理
+     *首先我们和exec捕获一样，把所有和正则匹配的都捕获到，然后把捕获的内容替换成我们新的内容
+     */
+    str = str.replace(/zhangsan/g, function (r, i) {
+        console.log(arguments, r, i);//执行每次的参数和exec捕获的结果是非常类似的
+        return "lisi";
+    });
+    console.log(str);
+    /**
+     * 第二个参数换成一个函数
+     * 1)匿名函数执行多少次，取决于正则能在字符串中捕获多少次
+     * 2)每次执行匿名函数，里面传递的参数值arguments和我们自己通过exec捕获的结果是非常类似的(即使正则有分组，我们同样可以通过arguments获取到分组捕获的内容)
+     * 3)return 返回的结果是什么，就把当前这次大正则捕获的内容替换成你返回的内容（若果没有return,就用undefined替换捕获到的内容，如果不想替换，就return捕获的内容->return arguments[0]）
+     */
+
+    //str = str.replace(/(\d+)/g, function () {
+    //   console.log(RegExp.$1);//获取第一分组中捕获的内容
+    //});
+    //console.log(str);
+</script>
+</body>
+</html>

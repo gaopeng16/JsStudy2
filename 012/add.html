@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>增加客户</title>
+    <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+
+<div class="box2">
+    <div>
+        <span>姓名:</span>
+        <input type="text" id="userName">
+    </div>
+    <div>
+        <span>年龄:</span>
+        <input type="text" id="userAge">
+    </div>
+    <div>
+        <span>电话:</span>
+        <input type="text" id="userPhone">
+    </div>
+    <div>
+        <span>地址:</span>
+        <input type="text" id="userAdd">
+    </div>
+    <div class="submit" id="submit">提交</div>
+</div>
+<script src="js/ajax.js"></script>
+<script>
+
+    String.prototype.queryURLParameter = function () {
+        var obj = {},
+            reg = /([^?=&#]+)=([^?=&#]+)/g;
+        this.replace(reg, function () {
+            var key = arguments[1],
+                value = arguments[2];
+            obj[key] = value;
+        });
+        return obj;
+    };
+
+    var userName = document.getElementById('userName'),
+        userAge = document.getElementById('userAge'),
+        userPhone = document.getElementById('userPhone'),
+        userAdd = document.getElementById('userAdd'),
+        submit = document.getElementById('submit');
+
+    //判断一下是修改还是增加
+    var urlObj = window.location.href.queryURLParameter(),
+        customId = urlObj.id,
+        isUpdate = typeof customId !== "undefined" ? true : false;
+    if (isUpdate) {
+        ajax({
+            url: "getInfo?id=" + customId,
+            success: function (data) {
+                if (data && data.code == 0) {
+                    var data = data.data;
+                    userName.value = data.name;
+                    userAge.value = data.age;
+                    userPhone.value = data.phone;
+                    userAdd.value = data.address;
+                }
+            }
+        });
+    }
+
+    submit.onclick = function () {
+        var obj = {
+            name: userName.value,
+            age: userAge.value,
+            phone: userPhone.value,
+            address: userAdd.value
+        };
+
+        if (isUpdate) {
+            obj.id = customId;
+            ajax({
+                url: "/updateInfo",
+                type: "post",
+                data: JSON.stringify(obj),
+                success: function (data) {
+                    if (data && data.code == 0) {
+                        window.location.href = "index.html";
+                        return;
+                    }
+                    alert(data.msg);
+                }
+            });
+            return;
+        }
+
+        ajax({
+            url: "/addInfo",
+            type: "post",
+            data: JSON.stringify(obj),
+            success: function (data) {
+                if (data && data.code == 0) {
+                    window.location.href = "index.html";
+                    return;
+                }
+                alert(data.msg);
+            }
+        });
+    }
+
+</script>
+</body>
+</html>

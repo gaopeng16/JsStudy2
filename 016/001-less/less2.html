@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link rel="stylesheet" href="TEST1.css">
+</head>
+<body>
+
+<div class="box"></div>
+
+<script>
+    var less = {
+        //env:设置运行的环境(生产模式还是开发模式)
+        //production:编译后的css缓存到本地localStorage中
+        //development:没有把编译后的css缓存到本地，在URL不是标准的格式下(例如：file://...),zidong shezhi
+        env: "development",
+        //logLevel:javascript控制台日志量
+        //async:同步或者异步导入文件，默认是false代表同步
+        //fileAsync:使用文件协议方位页面时异步加载导入的未交，默认false,如果有需要设为true
+        //poll:在监视模式下，每两次请求之间的时间间隔(ms)
+        poll: 1000
+    };
+</script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/less.js/3.0.2/less.min.js"></script>
+<script>
+    less.watch();//开启监听模式
+</script>
+</body>
+</html>
