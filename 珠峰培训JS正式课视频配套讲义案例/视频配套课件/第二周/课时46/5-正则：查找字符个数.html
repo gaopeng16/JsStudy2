@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+    //求一个字符串中次数出现最多的字符(字母)
+
+    var str = "zhufengpeixun2015yangfanqihang";
+    var reg = /[a-zA-Z]/g;
+    var obj = {};
+    //replace可以实现，把所有符合正则的进行遍历，当前这个案例中符合正则的一共有26个字母，所以就相当于循环了26次
+    str.replace(reg, function (item, index, input) {
+        //item(本次捕获的内容), index(本次捕获内容的开始索引), input(捕获的字符串)
+        obj[item] = obj[item] ? parseInt(obj[item]) + 1 : 1;
+    });
+    console.log(obj);
+
+    //forEach、map ?
+
+
+    /*
+     //思路一：循环每一个字符，然后记录每一个字符出现的次数，最后把次数最多的获取到就好了
+     var obj = {};
+     for (var i = 0; i < str.length; i++) {
+     var cur = str.charAt(i);
+     if (obj[cur]) {
+     obj[cur] = parseInt(obj[cur]) + 1;
+     continue;
+     }
+     obj[cur] = 1;
+     }
+     //先拿到最大的那个次数，然后在把对应次数的属性得到就可以了
+     var max = 0;
+     for (var key in obj) {
+     if (obj[key] > max) {
+     max = obj[key];
+     }
+     }
+     var ary = [];
+     for (var key in obj) {
+     if (obj[key] == max) {
+     ary.push(key);
+     }
+     }
+     console.log("出现次数最多的字符是:" + ary + " 出现了:" + max + "次");
+     */
+
+
+</script>
+</body>
+</html>

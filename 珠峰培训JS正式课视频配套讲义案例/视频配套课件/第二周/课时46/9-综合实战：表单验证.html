@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css">
+        body, div, input, span {
+            margin: 0;
+            padding: 0;
+        }
+
+        .aaa {
+            margin: 20px auto;
+            padding: 20px;
+            width: 500px;
+            height: 300px;
+            border: 1px dashed #ff0000;
+        }
+
+        #txtEmail {
+            padding-left: 10px;
+            width: 300px;
+            height: 30px;
+            line-height: 30px;
+            font-size: 16px;
+            color: #ccc;
+            border: 1px solid #008CD7;
+        }
+
+        #emailError {
+            display: inline-block;
+            margin-left: 10px;
+            height: 30px;
+            line-height: 30px;
+            font-size: 14px;
+            color: #ff0000;
+            font-family: "\5FAE\8F6F\96C5\9ED1", Helvetica, sans-serif;
+        }
+
+        #emailError.c {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+<!--
+  1、当输入框失去焦点的时候，检测输入的内容，进行友好提示
+  2、当最后提交内容的时候，为了保证数据的准确性，我们需要在进行验证
+  3、实现类似于placeholder的提示效果:输入框默认有内容，获取焦点后，内容消失，失去焦点，判断内容是我们输入的还是默认的，如果是默认的，默认的提示内容还要显示出来
+  4、做输入内容的强制限制:比如，只能是数字的话，当我们输入的不是数字，根本不让你输入
+-->
+<!--
+  常用事件
+  1、获取焦点 onfocus
+  2、失去焦点 onblur
+  3、onkeydown 键盘按下事件
+  4、onkeyup 键盘抬起事件
+  5、onchange 输入框内容改变事件
+  6、onclick 点击事件
+-->
+<div class="aaa">
+    <input type="text" id="txtEmail" value="请您输入有效的邮箱" default="请您输入有效的邮箱"/><span id="emailError"></span>
+</div>
+
+<script type="text/javascript">
+    String.prototype.myTrim = function () {
+        return this.replace(/(^\s*|\s*$)/g, "");
+    }
+
+    var oEmail = document.getElementById("txtEmail");
+    var oSpan = document.getElementById("emailError");
+
+    oEmail.onfocus = function () {
+        var val = this.value.myTrim();
+        if (val === this.getAttribute("default")) {
+            this.value = "";
+        }
+    }
+    oEmail.onblur = function () {
+        var val = this.value.myTrim();
+        if (val === "") {
+            this.value = this.getAttribute("default");
+            oSpan.innerHTML = "";
+            return;
+        }
+        check(val);
+    }
+    oEmail.onkeyup = function () {
+        var val = this.value.myTrim();
+        check(val);
+    }
+
+    function check(val) {
+        var reg = /^(?:\w|\.|-)+@(?:[0-9a-zA-Z-]+)(?:\.[0-9a-zA-z]+){1,2}$/;
+        if (!reg.test(val)) {
+            oSpan.innerHTML = "您输入的邮箱格式有误！";
+            oSpan.className = "";
+        } else {
+            oSpan.innerHTML = "输入正确！";
+            oSpan.className = "c";
+        }
+    }
+
+    //http://www.szyc.com/register/one_rt.html 这是一个传统的注册页面，自己回去练习做就可以了
+</script>
+</body>
+</html>

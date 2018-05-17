@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>模拟百度的下拉搜索</title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        input {
+            display: block;
+            outline: none;
+        }
+
+        ul, li {
+            list-style: none;
+        }
+
+        html, body {
+            color: #000;
+            font-size: 14px;
+            font-family: "\5FAE\8F6F\96C5\9ED1", Helvetica, sans-serif;
+        }
+
+        .box {
+            margin: 50px auto;
+            width: 300px;
+        }
+
+        .box input {
+            padding: 0 10px;
+            width: 278px;
+            height: 30px;
+            border: 1px solid green;
+        }
+
+        .box ul {
+            display: none;
+            border: 1px solid green;
+            border-top: none;
+        }
+
+        .box ul li {
+            padding: 0 10px;
+            height: 30px;
+            line-height: 30px;
+            cursor: pointer;
+        }
+
+        .box ul li:hover {
+            background: #EEE;
+        }
+    </style>
+</head>
+<body>
+<div class="box">
+    <input type="text" id="searchInp"/>
+    <ul id="searchBox">
+        <!--<li>珠峰培训</li>
+        <li>珠峰培训怎么样?</li>
+        <li>珠峰培训地址在哪?</li>
+        <li>珠峰培训就业怎么样?</li>-->
+    </ul>
+</div>
+<script charset="utf-8" type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+<script charset="utf-8" type="text/javascript">
+    var searchModule = (function () {
+        var $searchInp = $("#searchInp"),
+                $searchBox = $("#searchBox"),
+                interval = 100;
+
+        //->向百度的服务器发送JSONP请求,把数据获取到之后绑定到容器中
+        function bindHTML() {
+            var searchKey = $searchInp.val();
+
+            function callback(data) {
+                data = data["s"];
+                var str = '';
+                $.each(data, function (index, item) {
+                    if (index <= 3) {
+                        str += '<li>' + item + '</li>';
+                    }
+                });
+                if (str.length === 0) {
+                    $searchBox.html(str);
+                    return;
+                }
+                $searchBox.html(str).stop().slideDown(interval);
+            }
+
+            $.ajax({
+                url: "https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su?wd=" + searchKey,
+                dataType: "jsonp",
+                jsonp: "cb",
+                success: callback
+            });
+        }
+
+        //->事件绑定和模块的入口
+        function init() {
+            //->事件委托处理:点击的是LI我们让LI中的内容显示在文本框中,展示框消失;点击的是文本框什么事情都不错;否则展示框消失;
+            $(document).on("click", function (e) {
+                var tar = e.target,
+                        tarTag = tar.tagName.toUpperCase(),
+                        $tar = $(tar);
+
+                if (tarTag === "LI" && tar.parentNode.id === "searchBox") {
+                    $searchInp.val($tar.html());
+                    $searchBox.stop().slideUp(interval);
+                    return;
+                }
+
+                if (tar.id === "searchInp") {
+                    return;
+                }
+
+                $searchBox.stop().slideUp(interval);
+            });
+
+            //->文本框获取焦点或者输入内容的时候判断当前文本框中是否有内容,有内容绑定数据,没有内容隐藏展示框
+            $searchInp.on("focus keyup", function () {
+                var val = $(this).val();
+                if (val.length > 0) {
+                    bindHTML();
+                    return;
+                }
+                $searchBox.stop().slideUp(interval);
+            });
+        }
+
+        return {init: init};
+    })();
+    searchModule.init();
+</script>
+</body>
+</html>

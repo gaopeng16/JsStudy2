@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+    /*
+     * The original built-in class extension method based on common(v1.0)
+     */
+    ~function () {
+        var strPro = String.prototype;
+        //去除字符串首尾空格
+        strPro.myTrim = function () {
+            return this.replace(/(^\s*|\s*$)/g, "");
+        }
+        //区分汉字和字母的截取字符串
+        strPro.mySub = function () {
+            var len = arguments[0] || 10;
+            var isD = arguments[1] || false;//默认是不加的，想加的话传true
+            var str = "", n = 0;
+            for (var i = 0; i < this.length; i++) {
+                var s = this.charAt(i);
+                /[\u4e00-\u9fa5]/.test(s) ? n += 2 : n++;
+                if (n > len) {
+                    isD ? str += "..." : void 0;
+                    break;
+                }
+                str += s;
+            }
+            return str;
+        }
+    }();
+
+    var str = "     【网络营销】网络营销是asd一种利用互联网的营销形式，建立在互联网的基础上，以线上营销为导向，网络为工具，由营销人员利用专业的网络营销工具，面向广大网民开展一系列营销活动的新型营销方式。虽然网络营销很受大小企业喜欢，但真正能够让网络营销产生执行力的却少之又少，该如何增加其执行力？    ";
+    str = str.myTrim();
+    str = str.mySub(38, true);
+</script>
+</body>
+</html>

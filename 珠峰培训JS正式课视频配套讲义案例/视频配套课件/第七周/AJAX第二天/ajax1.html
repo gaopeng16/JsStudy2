@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script charset="utf-8" type="text/javascript" src="js/ajax.js"></script>
+<script type="text/javascript">
+    //    var xhr = createXHR();
+    //    console.log(xhr);
+
+
+    //->为了兼容IE6及更低的版本:如果第一个不支持,则浏览器会报错,后面就不在执行了
+    //    function createXHR() {
+    //     var xhr = null;
+    //     if (window.XMLHttpRequest) {
+    //     xhr = new XMLHttpRequest;
+    //     } else {
+    //     try {
+    //     xhr = new ActiveXObject("Microsoft.XMLHTTP");
+    //     } catch (e) {
+    //     try {
+    //     xhr = new ActiveXObject("Msxml2.XMLHTTP");
+    //     } catch (e) {
+    //     try {
+    //     xhr = new ActiveXObject("Msxml3.XMLHTTP");
+    //     } catch (e) {
+    //
+    //     }
+    //     }
+    //     }
+    //     }
+    //     return xhr;
+    //     }
+    //     var xhr = createXHR();
+    //     var xhr2 = createXHR();
+
+
+    //->JS高阶编程技巧之“惰性思想”:能够执行一次就搞定的绝对不会执行多次
+    //    var utils = (function () {
+    //        var flag = "getComputedStyle" in window;//->TRUE-标准浏览器 FALSE-IE6~8浏览器
+    //
+    //        function getCss() {
+    //            if (flag) {
+    //
+    //            } else {
+    //
+    //            }
+    //        }
+    //
+    //        return {
+    //            getCss: getCss
+    //        };
+    //    })();
+    //    utils.getCss();
+    //    utils.getCss();
+    //    utils.getCss();
+</script>
+</body>
+</html>

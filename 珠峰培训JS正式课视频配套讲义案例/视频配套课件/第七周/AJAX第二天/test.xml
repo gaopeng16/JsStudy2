@@ -1,0 +1,10 @@
+<root>
+    <person>
+        <name>超哥</name>
+        <age>20</age>
+    </person>
+    <person>
+        <name>田文</name>
+        <age>84</age>
+    </person>
+</root>

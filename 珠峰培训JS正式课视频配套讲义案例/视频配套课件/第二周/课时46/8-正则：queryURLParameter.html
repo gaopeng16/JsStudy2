@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+    //在真实的项目中，一般情况下，列表中有很多条数据，单击每一条数据进入详细页展示对应的不同的内容，并不是像我们理解的那样多个详细页，而是一个详细页
+    //？ 在一个详细页中我们怎么知道是那条信息点击来的，怎么显示不同的内容呢
+    //在浏览器中，在地址栏输入的内容是我们当前页面的URL地址
+    //在回到我们上面的问题，同一个详细页如何的区分我们的信息呢，通过的是URL地址中?后面的参数来区分的，我们把?后面的参数叫做地址栏的问号传参
+    //？后面可能会跟多组参数，每一组之间用&隔开
+    //进入详细页面的第一件事情，就是获取当前页面的URL地址，并且把?后面的参数包存在一个对象中：{matchId:1467084,competitionId:100000}
+    var str = "http://sports.qq.com/kbsweb/game.htm?matchId=1467084&competitionId=100000";
+    function queryURLParameter(url) {
+        var reg = /([^?&=]+)=([^?&=]+)/g, obj = {};
+        url.replace(reg, function () {
+            obj[arguments[1]] = arguments[2];
+        });
+        return obj;
+    }
+    var o = queryURLParameter(str);
+    console.log(o);
+
+
+</script>
+</body>
+</html>

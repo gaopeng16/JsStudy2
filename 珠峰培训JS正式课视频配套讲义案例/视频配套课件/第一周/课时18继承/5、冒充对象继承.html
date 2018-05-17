@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+    //->冒充对象继承：把父类私有的+公有的 克隆一份一模一样的 给子类私有的
+    function A() {
+        this.x = 100;
+    }
+    A.prototype.getX = function () {
+        console.log(this.x);
+    };
+
+    function B() {
+        //this->n
+        var temp = new A;
+        for (var key in temp) {
+            this[key] = temp[key];
+        }
+        temp = null;
+    }
+
+
+    var n = new B;
+    n.getX();
+
+
+</script>
+</body>
+</html>
