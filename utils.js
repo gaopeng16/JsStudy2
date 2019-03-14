@@ -78,17 +78,17 @@ var utils = (function () {
      * @param curEle [object]
      * @param attr
      */
-    function getCss(attr) {
+    function getCss(curEle, attr) {
         var val = null, reg = null;
         if (flag) {
-            val = window.getComputedStyle(this, null)[attr];
+            val = window.getComputedStyle(curEle, null)[attr];
         } else {
             if (attr === 'opacity') {
-                val = this.currentStyle['filter'];
+                val = curEle.currentStyle['filter'];
                 reg = /^alpha\(opacity=(\d+(?:\.\d+)?)\)$/i;
                 val = reg.test(val) ? reg.exec(val[1]) / 100 : 1;
             } else {
-                val = this.currentStyle[attr];//兼容ie6~8
+                val = curEle.currentStyle[attr];//兼容ie6~8
             }
         }
         reg = /^-?\d+(\.\d+)?(px|pt|rem|em)?$/i;
@@ -105,15 +105,15 @@ var utils = (function () {
      * @param attr
      * @param value
      */
-    function setCss(attr, value) {
+    function setCss(curEle, attr, value) {
         if (attr === "float") {
-            this["style"]["cssFloat"] = value;
-            this["style"]["styleFloat"] = value;
+            curEle["style"]["cssFloat"] = value;
+            curEle["style"]["styleFloat"] = value;
             return;
         }
         if (attr === "opacity") {
-            this["style"]["opacity"] = value;
-            this["style"]["filter"] = "alpha(opacity=" + value * 100 + ")";
+            curEle["style"]["opacity"] = value;
+            curEle["style"]["filter"] = "alpha(opacity=" + value * 100 + ")";
             return;
         }
         var reg = /^(width|height|top|bottom|left|right|((margin|padding)(Top|Bottom|Left|Right)?))$/;
@@ -122,7 +122,7 @@ var utils = (function () {
                 value += "px";
             }
         }
-        this["style"][attr] = value;
+        curEle["style"][attr] = value;
     }
 
     /**
@@ -130,10 +130,10 @@ var utils = (function () {
      * @param curEle
      * @param obj
      */
-    function setGroupCss(options) {
+    function setGroupCss(curEle, options) {
         for (var key in options) {
             if (options.hasOwnProperty(key)) {
-                setCss.call(this, key, options[key]);
+                setCss.call(curEle, key, options[key]);
             }
         }
     }
