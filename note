@@ -62,6 +62,16 @@
   e.stopPropagation() ? e.stopPropagation : e.cancelBubble=true;
 ~~鼠标焦点丢失：ie/ff setCapture()/releaseCapture  chrome:document.(onmousemove/onmouseup)
 ~~addEventListener,在IE6~8不兼容attachEvent
+~~window.getComputedStyle() 在IE6~8不兼容IE6~8下使用currentStyle
+   function getCss(curEle,attr){
+      var val = null;
+      try{
+        val = window.getComputdStyle(curEle,null)[attr];
+      }catch(e){
+        val = curEle.currentStyle[attr];
+      }
+      return val;
+   }
 
 
 
