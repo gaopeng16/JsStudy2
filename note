@@ -65,9 +65,9 @@
 ~~window.getComputedStyle() 在IE6~8不兼容IE6~8下使用currentStyle
    function getCss(curEle,attr){
       var val = null;
-      try{
+      if("getComputdStyle" in window){
         val = window.getComputdStyle(curEle,null)[attr];
-      }catch(e){
+      }else{
         val = curEle.currentStyle[attr];
       }
       return val;
