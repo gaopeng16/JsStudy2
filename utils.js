@@ -131,10 +131,6 @@ var utils = (function () {
      * @param obj
      */
     function setGroupCss(options) {
-        options = options || 0;
-        if(options.toString() !== "[object Object]"){
-            return;
-        }
         for (var key in options) {
             if (options.hasOwnProperty(key)) {
                 setCss.call(this, key, options[key]);
