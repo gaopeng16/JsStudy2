@@ -266,10 +266,10 @@ var utils = (function () {
      */
     function prevAll(curEle) {
         var ary = [];
-        var pre = prev(curEle);
+        var pre = this.prev(curEle);
         while (pre) {
             ary.unshift(pre);
-            pre = prev(pre);
+            pre = this.prev(pre);
         }
         return ary;
     }
@@ -281,10 +281,10 @@ var utils = (function () {
      */
     function nextAll(curEle) {
         var ary = [];
-        var nex = prev(curEle);
+        var nex = this.prev(curEle);
         while (nex) {
             ary.push(nex);
-            nex = prev(nex);
+            nex = this.prev(nex);
         }
         return ary;
     }
@@ -294,8 +294,8 @@ var utils = (function () {
      * @param curEle
      */
     function sibling(curEle) {
-        var pre = prev(curEle);
-        var nex = next(curEle);
+        var pre = this.prev(curEle);
+        var nex = this.next(curEle);
         var ary = [];
         pre ? ary.push(pre) : null;
         nex ? ary.push(nex) : null;
@@ -307,7 +307,7 @@ var utils = (function () {
      * @param curEle
      */
     function siblings(curEle) {
-        return prevAll(curEle).concat(nextAll(curEle));
+        return this.prevAll(curEle).concat(this.nextAll(curEle));
     }
 
     /**
@@ -315,7 +315,7 @@ var utils = (function () {
      * @param curEle
      */
     function index(curEle) {
-        return prevAll(curEle).length;
+        return this.prevAll(curEle).length;
     }
 
     /**
@@ -323,7 +323,7 @@ var utils = (function () {
      * @param curEle
      */
     function firstChild(curEle) {
-        var chs = children(curEle);
+        var chs = this.children(curEle);
         return chs.length > 0 ? chs[0] : null;
     }
 
@@ -333,7 +333,7 @@ var utils = (function () {
      * @returns {null}
      */
     function lastChild(curEle) {
-        var chs = children(curEle);
+        var chs = this.children(curEle);
         return chs.length > 0 ? chs[chs.length - 1] : null;
     }
 
