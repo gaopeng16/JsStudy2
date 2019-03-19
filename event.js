@@ -5,7 +5,8 @@
             fn.call(obj, e);
         }
     }
-
+    
+    // 创建时间池，并且把需要给当前元素绑定的方法一次的增加到事件池中
     function on(ele, type, fn) {
         if (/^self/.test(type)) {//判断是否是自定义时间,自定义时间已self开头
             if (!ele[type]) {
@@ -73,7 +74,8 @@
             }
         }
     }
-
+    
+    // 在自己的事件池中，把某一个方法移除
     function off(ele, type, fn) {
         if (/^selef/.test(type)) {
             var ary = ele[type];
